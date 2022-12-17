@@ -9,9 +9,7 @@ import java.awt.event.KeyEvent;
 //sprite created by sylvius fischer
 public class Player extends JPanel{
     
-    private BufferedImage img;
-    private BufferedImage imageArray_walkRight[]; // state 1
-    private BufferedImage imageArray_walkLeft[]; // state 2
+
     private BufferedImage imageArray[][]; // i = state, j = frame
     private int lookDirection; // changed by change state, 1 : right, 2 : left, 3 : up, 4 : down
     private final int walkRight_totalFrames = 4;
@@ -29,16 +27,12 @@ public class Player extends JPanel{
         state = 1;
         speed = 10;
         imageArray = new BufferedImage[9][];
-        try {
-            img = ImageIO.read(getClass().getResource("myDog.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
 
         //setting X and Y coords
         position = new int[2];
-        position[0] = 0;
-        position[1] = 0;
+        position[0] = 500;
+        position[1] = 350;
             //Walk right animation 
         imageArray[1] = new BufferedImage[walkRight_totalFrames];
         for (int i = 0; i < walkRight_totalFrames; i++) {
@@ -192,40 +186,33 @@ public class Player extends JPanel{
         g.drawImage(imageArray[state][currentFrame / 8], 0, 0, this.getWidth(), this.getHeight(), this);
     }
 
-
-    public void move (int keyPressed) {
-        if (keyPressed == 0) {
-            position[0] -= 5;
-        } else if (keyPressed == KeyEvent.VK_LEFT) {
-            position[0] -= 5;
-        } else if (keyPressed == KeyEvent.VK_RIGHT) {
-            position[0] += 5;
-        } else if (keyPressed == KeyEvent.VK_UP) {
-            position[1] -= 5;
-        } else if (keyPressed == KeyEvent.VK_DOWN) {
-            position[1] += 5;
-        }
-        this.setBounds(position[0], position[1], 400,  400 );
-    }
-
-
     public void handleKey (int keyPressed) {
+        System.out.println("x: " + this.position[0] + ", y: " + this.position[1]);
         if (keyPressed == 0) {
             changeState(0);
         } else if (keyPressed == KeyEvent.VK_LEFT) {
             changeState(2);
-            position[0] -= speed;
+            if (position[0] > 50) {
+                position[0] -= speed;
+            }
         } else if (keyPressed == KeyEvent.VK_RIGHT) {
             changeState(1);
-            position[0] += speed;
+            if (position[0] < 870) {
+                position[0] += speed;
+            }
         } else if (keyPressed == KeyEvent.VK_UP) {
             changeState(3);
-            position[1] -= speed;
+            if (this.position[1] > 30) {
+                System.out.println(this.position[1]);
+                position[1] -= speed;
+            }
         } else if (keyPressed == KeyEvent.VK_DOWN) {
             changeState(4);
-            position[1] += speed;
+            if (position[1] < 700) {
+                position[1] += speed;
+            }
         }
-        this.setBounds(position[0], position[1], 200,  200 );
+        this.setBounds(position[0], position[1], 100,  100 );
     }
 
     public int[] getPosition() {

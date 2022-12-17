@@ -28,7 +28,7 @@ public class GameEngine implements KeyListener {
         frame.add(background);
         background.add(player);
         frame.setLayout(null);
-        frame.setSize(2000, 1000);
+        frame.setSize(1024, 900);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.addKeyListener(this);

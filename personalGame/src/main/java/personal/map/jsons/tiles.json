@@ -1,0 +1,13 @@
+[
+    {
+        "id": 0,
+        "steppable": false,
+        "name": "water"
+    },
+    {
+        "id": 1,
+        "steppable": true,
+        "name": "land"
+    }
+]
+

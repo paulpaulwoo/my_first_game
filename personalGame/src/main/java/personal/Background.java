@@ -4,21 +4,25 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import java.awt.Graphics;
+import java.awt.*;
 
 public class Background extends JPanel {
     private BufferedImage img;
     public Background() {
+        this.setLayout(new GridBagLayout());
+        this.setBounds(0, 0,1200, 1000);
         try {
-            img = ImageIO.read(getClass().getResource("Crystal Ball.png"));
+            img = ImageIO.read(getClass().getResource("board2.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.setBounds(0, 0,1500, 1400);
+        
     }
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawImage(img,0, 0, this);
+
     }
     
 }
