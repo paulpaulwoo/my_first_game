@@ -24,7 +24,7 @@ public class Player extends Entity{
     private int currentFrame = 0;
     private int state;
     private int totalImages = 1;
-    private int speed;
+    public int speed;
     public final int WIDTH = 100;
     public final int HEIGHT = 100;
     private boolean changeReady = false;
@@ -223,30 +223,37 @@ public class Player extends Entity{
     
     public boolean colisionDetection(int direction) {
         //1 : right, 2 : left, 3 : up, 4 : down
+        System.out.println("Player right bound = " + (position[0] + WIDTH) + ", Player top bound = " + position[1]);
         if (direction == 1) {
             //System.out.println("colision check right");
+            
             for (int i = 0; i < enemies.size(); i++) {
+                /*
                 System.out.println("Player right bound = " + (position[0] + WIDTH) + ", Enemy left bound = " + enemies.get(i).position[0] + ", Enemy right bound= " + (enemies.get(i).position[0] + enemies.get(i).WIDTH)
                 + ", Player top bound = " + position[1] + ", Enemy top bound = " + enemies.get(i).position[1]);
-                if ((((position[0] + WIDTH + speed > enemies.get(i).position[0]) && (position[0] + WIDTH + speed < enemies.get(i).position[0] + enemies.get(i).WIDTH)) 
-                    && ((((position[1] + (HEIGHT / 2) > enemies.get(i).position[1]) && (position[1] + (HEIGHT / 2) < enemies.get(i).position[1] + enemies.get(i).HEIGHT))) 
-                    /*|| (((position[1] + HEIGHT > enemies.get(i).position[1]) && (position[1] + HEIGHT < enemies.get(i).position[1] + enemies.get(i).HEIGHT)))*/))) {
+                if ((((position[0] + WIDTH > enemies.get(i).position[0]) && (position[0] + WIDTH  < enemies.get(i).position[0] + enemies.get(i).WIDTH)) 
+                    && ((((position[1] + (HEIGHT / 1.4) > enemies.get(i).position[1]) && (position[1] + (HEIGHT / 1.4) < enemies.get(i).position[1] + enemies.get(i).HEIGHT)))))) {
                     return false;
                 }
+                 */
+                return colisionCheck(direction, this, enemies.get(i));
             }
             
         } else if (direction == 2) {
             for (int i = 0; i < enemies.size(); i++) {
-                if ((((position[0] - speed > enemies.get(i).position[0]) && (position[0] - speed < enemies.get(i).position[0] + enemies.get(i).WIDTH)) 
-                    && ((position[1] + (HEIGHT / 2) > enemies.get(i).position[1]) && (position[1] + (HEIGHT / 2) < enemies.get(i).position[1] + enemies.get(i).HEIGHT)))) {
-                    return false;
-                }
+                return colisionCheck(direction, this, enemies.get(i));
             }
         } else if (direction == 3) {
-            
+            for (int i = 0; i < enemies.size(); i++) {
+                return colisionCheck(direction, this, enemies.get(i));
+            }
         } else {
-
+            for (int i = 0; i < enemies.size(); i++) {
+                return colisionCheck(direction, this, enemies.get(i));
+            }
         }
+        
+        
         //System.out.println("colision passed");
         return true;
     }
@@ -265,13 +272,13 @@ public class Player extends Entity{
             }
             break;
             case 3:
-            if (position[1] > 30) {
+            if (position[1] > 30 && (colisionDetection(3))) {
                 position[1] -= speed;
                 //setComponentZOrder(this, position[1]);
             }
             break;
             case 4:
-            if (position[1] < 700) {
+            if (position[1] < 700 && (colisionDetection(4))) {
                 position[1] += speed;
             }
             break;

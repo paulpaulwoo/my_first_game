@@ -20,12 +20,12 @@ public class Amg1 extends Enemy {
     private final int spawn_totalFrames = 50;
     private int currentFrame = 0;
     private int state; // 1: spawn
-    private int speed;
+    public int speed;
     private int totalImages;
     private boolean changeReady = false;
     private int attackRange = 50;
     private Player player;
-    
+    private boolean stunned = false;
     
     private int divider = 1;
 
@@ -42,7 +42,9 @@ public class Amg1 extends Enemy {
         //setComponentZOrder(this, position[1]);
         this.player = player;
 
-        this.setSize(100, 100);
+        this.setSize(80, 100);
+
+
 
         imageArray[1] = new BufferedImage[walkRight_totalFrames];
         for (int i = 0; i < walkRight_totalFrames; i++) {
@@ -133,10 +135,14 @@ public class Amg1 extends Enemy {
                 System.out.println("IN ATTACK RANGE");
                 //DEBUG
                 changeState(1);
+            } else if (stunned) {
+
+            } else if (false) {
+
             }
         }
 
-        this.setBounds(position[0], position[1], 100,  100 );
+        this.setBounds(position[0], position[1], WIDTH, HEIGHT);
     }
 
     @Override
