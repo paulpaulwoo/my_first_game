@@ -3,12 +3,9 @@ package personal.enemy;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import javax.swing.JPanel;
-
 import personal.player.Player;
-
 import java.awt.Graphics;
-import java.awt.event.KeyEvent;
+
 import java.lang.Math;
 public class Amg1 extends Enemy {
     private BufferedImage imageArray[][]; // i = state, j = frame
@@ -23,17 +20,22 @@ public class Amg1 extends Enemy {
     public int speed;
     private int totalImages;
     private boolean changeReady = false;
-    private int attackRange = 50;
+    private int attackRange = 100;
     private Player player;
     private boolean stunned = false;
     
     private int divider = 1;
+    int primaryAttackRange; // range in which facing
+    int secondaryAttackRange; // range in which not facing
 
     public Amg1(Player player) {
+        entities.add(this);
+        SPRITEWIDTH = 80;
+        SPRITEHEIGHT = 100;
         WIDTH = 100;
         HEIGHT = 100;
         state = 5;
-        speed = 8;
+        speed = 5;
         imageArray = new BufferedImage[9][];
         //setting X and Y coords
         position = new int[2];
@@ -41,8 +43,9 @@ public class Amg1 extends Enemy {
         position[1] = (int) (Math.random() * 670 + 30);
         //setComponentZOrder(this, position[1]);
         this.player = player;
+        
 
-        this.setSize(80, 100);
+        this.setSize(WIDTH, HEIGHT);
 
 
 
@@ -112,10 +115,10 @@ public class Amg1 extends Enemy {
         // 2 if left
         // 3 if up
         // 4 if down
-        if ((((position[0] + WIDTH + attackRange > player.getPosition()[0]) && (position[0] + WIDTH + attackRange < player.getPosition()[0] + player.WIDTH)) 
-            && ((position[1] > player.getPosition()[1]) && (position[1] < player.getPosition()[1] + player.HEIGHT))) 
-        /*||  (((position[0] + WIDTH + attackRange > player.getPosition()[0]) && (position[0] + WIDTH + attackRange < player.getPosition()[0] + player.WIDTH)) 
-            && ((position[1] + HEIGHT > player.getPosition()[1]) && (position[1] + HEIGHT < player.getPosition()[1] + player.HEIGHT)) )*/
+        if ((((position[0] + SPRITEWIDTH + attackRange > player.getPosition()[0]) && (position[0] + SPRITEWIDTH + attackRange < player.getPosition()[0] + player.SPRITEWIDTH)) 
+            && ((position[1] > player.getPosition()[1]) && (position[1] < player.getPosition()[1] + player.SPRITEHEIGHT))) 
+        /*||  (((position[0] + SPRITEWIDTH + attackRange > player.getPosition()[0]) && (position[0] + SPRITEWIDTH + attackRange < player.getPosition()[0] + player.SPRITEWIDTH)) 
+            && ((position[1] + SPRITEHEIGHT > player.getPosition()[1]) && (position[1] + SPRITEHEIGHT < player.getPosition()[1] + player.SPRITEHEIGHT)) )*/
         )
         {
             //right
@@ -129,16 +132,65 @@ public class Amg1 extends Enemy {
     public void update() { // AI
         // TODO Auto-generated method stub
         if (changeReady) {
-            //if ()
             if (inAttackRange() != 0) {
                 //DEBUG
                 System.out.println("IN ATTACK RANGE");
                 //DEBUG
                 changeState(1);
+                return;
             } else if (stunned) {
 
-            } else if (false) {
-
+            } else {
+                
+                //get direction to move                
+                System.out.println("Enemy Coords: " + position[0] + ", " +position[1]);
+                System.out.println("Player Coords: " + this.player.getPosition()[0] + ", " + this.player.getPosition()[1]);
+                if (Math.abs(position[0] - this.player.getPosition()[0]) >= Math.abs(position[1] - this.player.getPosition()[1])) {
+                    //move horizontal
+                    if (position[0] - this.player.getPosition()[0] < 0) {
+                        System.out.println("Right");
+                        changeState(1);
+                        return;
+                    } else {
+                        System.out.println("Left");
+                        changeState(2);
+                        return;
+                    }
+                } else {
+                    //move vertical
+                    if (position[1] - this.player.getPosition()[1] > 0) {
+                        System.out.println("Up");
+                        changeState(3);
+                        return;
+                    } else {
+                        System.out.println("Down");
+                        changeState(4);
+                        return;
+                    }
+                }
+            }
+        } else {
+            // execute the actions based on state
+            
+            switch (state) {
+                case 0:
+                    break;
+                case 1:
+                    move(1);
+                    break;
+                case 2:
+                    move(2);
+                    break;
+                case 3:
+                    move(3);
+                    break;
+                case 4:
+                    move(4);
+                    break;
+                case 5:
+                break;
+                case 6:
+                break;
             }
         }
 
@@ -149,6 +201,7 @@ public class Amg1 extends Enemy {
     public void changeState(int state) {
         // TODO Auto-generated method stub
         if (this.state == state) {
+            changeReady = false;
             return;
         } else {
             switch (state) {
@@ -217,10 +270,43 @@ public class Amg1 extends Enemy {
 
     }
 
+    public boolean colisionDetection(int direction) {
+        for (int i = 0; i < entities.size(); i++) {
+            if (colisionCheck(direction, this, entities.get(i)) == false) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     @Override
-    public void move() {
+    public void move(int direction) {
         // TODO Auto-generated method stub
+
+        switch (direction){
+            case 1:
+        if (position[0] < 870 && (colisionDetection(direction))) {
+            position[0] += speed;
+        }
+        break;
+        case 2:
+        if (position[0] > 50 && (colisionDetection(direction))) {
+            position[0] -= speed;
+        }
+        break;
+        case 3:
+        if (position[1] > 30 && (colisionDetection(direction))) {
+            position[1] -= speed;
+            //setComponentZOrder(this, position[1]);
+        }
+        break;
+        case 4:
+        if (position[1] < 700 && (colisionDetection(direction))) {
+            position[1] += speed;
+        }
+        
+        }
         
     }
 
