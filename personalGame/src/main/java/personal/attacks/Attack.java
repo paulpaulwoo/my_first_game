@@ -13,7 +13,7 @@ import java.awt.Graphics2D;
 import java.util.HashSet;
 
 public class Attack extends Entity {
-    int totalFrames;
+    public int totalFrames;
     int baseDirection;
     int direction;
     int animationFrames;
@@ -61,17 +61,17 @@ public class Attack extends Entity {
         int[] returnpos = new int[2];
         if (direction == 1) {
             returnpos[0] = source.spritePosition[0] + source.SPRITEWIDTH;
-            returnpos[1] = source.spritePosition[1];
+            returnpos[1] = source.spritePosition[1] + ((source.SPRITEHEIGHT - height) / 2);
         } else if (direction == 2) {
             returnpos[0] = source.spritePosition[0] - width;
-            returnpos[1] = source.spritePosition[1];
+            returnpos[1] = source.spritePosition[1] + ((source.SPRITEHEIGHT - height) / 2);
         } else if (direction == 3) {
             returnpos[0] = source.spritePosition[0] + ((source.SPRITEWIDTH - width) / 2);
-            returnpos[1] = source.spritePosition[1] - source.SPRITEHEIGHT;
+            returnpos[1] = source.spritePosition[1] - SPRITEHEIGHT / 2;
             System.out.println("Original pos : " + position[0] + ", new pos :" + returnpos[0]) ;
         } else if (direction == 4) {
             returnpos[0] = source.spritePosition[0] + ((source.SPRITEWIDTH - width) / 2);
-            returnpos[1] = source.spritePosition[1] + source.SPRITEHEIGHT;
+            returnpos[1] = source.spritePosition[1] + SPRITEHEIGHT;
         }
         return returnpos;
     }
@@ -146,6 +146,7 @@ public class Attack extends Entity {
     
     public void attackLogic(Entity source, Entity target) {
         System.out.println("ATTACK HIT, didn't override");
+        // TODO: Develop attack logic, including being stunned, lowering hp, and invincibility frames
         Sound.playSound(soundHitId);
     };
 

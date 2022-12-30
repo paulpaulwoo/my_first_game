@@ -308,7 +308,7 @@ public class Player extends Entity{
         if (delay > 0) {
             return;
         }
-        System.out.println("Attack detected");
+
         Slashattack slashAttack = new Slashattack(1, direction, (Entity) this, 10, this.position, 15, GameEngine.engine.loader);
         GameEngine.engine.frame.getLayeredPane().add(slashAttack);
         GameEngine.engine.frame.getLayeredPane().setLayer(slashAttack, 1900);

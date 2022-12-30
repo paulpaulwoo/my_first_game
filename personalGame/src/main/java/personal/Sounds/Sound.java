@@ -4,6 +4,7 @@ import java.applet.AudioClip;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -29,8 +30,9 @@ public class Sound {
         }).start();
     }
     */
+
     public static HashMap<Integer, String> soundIds = new HashMap<>();
-    public static HashMap<Integer, Clip> sounds = new HashMap<>();
+    public static HashMap<Integer, SoundData> soundData = new HashMap<>();
     public static boolean wasInit = false;
 
     public static void init() {
@@ -40,18 +42,19 @@ public class Sound {
 
     public static void loadSoud(int soundId, String url) {
       try {
-        Clip clip = AudioSystem.getClip();
         AudioInputStream inputStream = AudioSystem.getAudioInputStream(Sound.class.getResourceAsStream(url));
-        clip.open(inputStream);
-        sounds.put(Integer.valueOf(soundId), clip);
+        byte[] data = inputStream.readAllBytes();
+        AudioFormat format = inputStream.getFormat();
+        SoundData dataRun = new SoundData(soundId, data, format);
+        soundData.put(Integer.valueOf(soundId), dataRun);
       } catch (Exception e) {
         System.err.println(e.getMessage() + "COULDNT LOAD SOUND");
       }
     }
+    
     public static void playSound(int soundId) {
-      sounds.get(Integer.valueOf(soundId)).setMicrosecondPosition(0);
-      sounds.get(Integer.valueOf(soundId)).start();
-    }
+      soundData.get(Integer.valueOf(soundId)).play();
+    } 
 
     public static void loadSounds(int [] soundidints) {
       if (!wasInit) {
