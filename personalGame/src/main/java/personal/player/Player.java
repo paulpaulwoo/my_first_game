@@ -7,7 +7,6 @@ import javax.swing.JPanel;
 import personal.Entity;
 import personal.GameEngine;
 import personal.attacks.Slashattack;
-import personal.enemy.Enemy;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 //sprite created by sylvius fischer
@@ -29,22 +28,14 @@ public class Player extends Entity{
     private boolean changeReady = false;
 
     public Player() {
-        entities.add(this);
+        super(100, 70, 100, 100, 10, 500, 350);
         this.state = 1;
-        speed = 10;
-        WIDTH = 100;
-        HEIGHT = 100;
-        SPRITEHEIGHT = (int)(100);
-        SPRITEWIDTH = (int) (100);
         imageArray = new BufferedImage[14][];
-        this.setSize(WIDTH, HEIGHT);
         this.lookDirection = 1;
         //setting X and Y coords
-        position = new int[2];
-        position[0] = 500;
-        position[1] = 350;
-            //Walk right animation 
+        //Walk right animation 
         imageArray[1] = new BufferedImage[walkRight_totalFrames];
+        
         for (int i = 0; i < walkRight_totalFrames; i++) {
             try {
                 imageArray[1][i] = ImageIO.read(getClass().getResource("sprites/walkRight_" + (1+ i) + ".png"));
@@ -162,7 +153,7 @@ public class Player extends Entity{
             }
         }
 
-        this.setOpaque(false);
+
         changeState(0);
     }
 
@@ -330,26 +321,30 @@ public class Player extends Entity{
             case 1:
             if ((position[0] < 870) && (colisionDetection(1))) {
                 position[0] += speed;
+                spritePosition[0] += speed;
             }
             break;
             case 2:
             if ((position[0] > 50) && (colisionDetection(2))) {
                 position[0] -= speed;
+                spritePosition[0] -= speed;
             }
             break;
             case 3:
             if (position[1] > 30 && (colisionDetection(3))) {
                 position[1] -= speed;
+                spritePosition[1] -= speed;
                 //setComponentZOrder(this, position[1]);
             }
             break;
             case 4:
             if (position[1] < 700 && (colisionDetection(4))) {
                 position[1] += speed;
+                spritePosition[1] += speed;
             }
             break;
         }
-        this.setBounds(position[0], position[1], 100,  100 );
+        this.setBounds(position[0], position[1], this.WIDTH,  this.HEIGHT );
     }
 
     @Override

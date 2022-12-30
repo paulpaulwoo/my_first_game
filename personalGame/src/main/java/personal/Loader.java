@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
+import java.awt.Image;
 import javax.imageio.ImageIO;
 
 import personal.loadedImage;

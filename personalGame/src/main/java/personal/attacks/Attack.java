@@ -2,6 +2,7 @@ package personal.attacks;
 
 import personal.Entity;
 import personal.GameEngine;
+import personal.Sounds.Sound;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -9,7 +10,7 @@ import javax.imageio.ImageIO;
 import personal.player.Player;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-
+import java.util.HashSet;
 
 public class Attack extends Entity {
     int totalFrames;
@@ -22,45 +23,17 @@ public class Attack extends Entity {
     String imageSuffix;
     private BufferedImage imageArray[];
     private BufferedImage displayArray[];
-    Entity source;
+    public Entity source;
     boolean piercing;
     int damage;
     int iFrames;
     int effectId;
+    HashSet<Entity> hitTracker;
+    int soundId;
+    int soundHitId;
 
-    public Attack(int totalFrames,int baseDirection, int direction, int animationFrames, int divider, String imagePrefix, String imageSuffix, Entity source, boolean piercing, int damage, int iFrames, int sprite_width, int sprite_height, int width, int height) {
-        this.totalFrames = totalFrames;
-        this.baseDirection = baseDirection;
-        this.direction = direction;
-        this.animationFrames = animationFrames;
-        this.divider = divider;
-        this.imagePrefix = imagePrefix;
-        this.imageSuffix = imageSuffix;
-        this.source = source;
-        this.piercing = piercing;
-        this.damage = damage;
-        position = source.position; // TOCHANGE!!!!!!!!!!
-        this.iFrames = iFrames;
-        currentFrame = 0;
-        this.imageArray = new BufferedImage[animationFrames];
-        for (int i = 0; i < animationFrames; i++) {
-            try {
-                imageArray[i] = ImageIO.read(getClass().getResource(imagePrefix + (1+ i) + imageSuffix));
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-        entities.add(this);
-        this.displayArray = new BufferedImage[animationFrames];
-        for (int i = 0; i < animationFrames; i++) {
-            displayArray[i] = rotate(imageArray[i], getRotationDegrees(baseDirection, direction), width, height);
-        }
-        this.setOpaque(false);
-        this.setBounds(position[0], position[1], width, height);
-    }
-
-    public Attack(int totalFrames, int baseDirection, int direction, int animationFrames, int divider, BufferedImage[] imageArray, Entity source, boolean piercing, int damage, int iFrames, int sprite_width, int sprite_height, int width, int height) {
+    public Attack(int totalFrames, int baseDirection, int direction, int animationFrames, int divider, BufferedImage[] imageArray, Entity source, boolean piercing, int damage, int iFrames, int sprite_width, int sprite_height, int width, int height, int soundId, int soundHitId) {
+        super(sprite_width, sprite_height, width, height, 0, 0, 0);
         this.totalFrames = totalFrames;
         this.direction = direction;
         this.baseDirection = baseDirection;
@@ -73,30 +46,32 @@ public class Attack extends Entity {
         currentFrame = 0;
         this.imageArray = imageArray;
         this.position = setPosition(source.position, direction, width, height, source);
-        
-        entities.add(this);
         this.displayArray = new BufferedImage[animationFrames];
+        this.soundId = soundId;
+        this.soundHitId = soundHitId;
+        hitTracker = new HashSet<Entity>();
         for (int i = 0; i < animationFrames; i++) {
             displayArray[i] = rotate(imageArray[i], getRotationDegrees(baseDirection, direction), width, height);
         }
-        this.setOpaque(false);
         this.setBounds(position[0], position[1], width, height);
+        Sound.playSound(soundId);
     }
     
     private int [] setPosition(int [] position, int direction, int width, int height, Entity source) {// init for position based on height and width, direction
         int[] returnpos = new int[2];
         if (direction == 1) {
-            returnpos[0] = position[0] + source.SPRITEWIDTH;
-            returnpos[1] = position[1];
+            returnpos[0] = source.spritePosition[0] + source.SPRITEWIDTH;
+            returnpos[1] = source.spritePosition[1];
         } else if (direction == 2) {
-            returnpos[0] = position[0] - width;
-            returnpos[1] = position[1];
+            returnpos[0] = source.spritePosition[0] - width;
+            returnpos[1] = source.spritePosition[1];
         } else if (direction == 3) {
-            returnpos[0] = position[0];
-            returnpos[1] = position[1] - source.SPRITEHEIGHT;
+            returnpos[0] = source.spritePosition[0] + ((source.SPRITEWIDTH - width) / 2);
+            returnpos[1] = source.spritePosition[1] - source.SPRITEHEIGHT;
+            System.out.println("Original pos : " + position[0] + ", new pos :" + returnpos[0]) ;
         } else if (direction == 4) {
-            returnpos[0] = position[0];
-            returnpos[1] = position[1] + height;
+            returnpos[0] = source.spritePosition[0] + ((source.SPRITEWIDTH - width) / 2);
+            returnpos[1] = source.spritePosition[1] + source.SPRITEHEIGHT;
         }
         return returnpos;
     }
@@ -168,18 +143,28 @@ public class Attack extends Entity {
         // Return rotated buffer image
         return newImage;
     }
+    
+    public void attackLogic(Entity source, Entity target) {
+        System.out.println("ATTACK HIT, didn't override");
+        Sound.playSound(soundHitId);
+    };
+
 
     public void update() {
         if (totalFrames <= 0) {
             GameEngine.engine.toRemove.add(this);
         }
-
+        for (int i = 0; i < entities.size(); i++) {
+            if ((colisionCheck(direction, this, entities.get(i)) == false) && (!hitTracker.contains(entities.get(i)))) {
+                attackLogic(source, entities.get(i));
+                hitTracker.add(entities.get(i));
+            }
+        }
     }
 
     //need to set Position, WIDTH, HEIGHT, SPRITEWIDTH, SPRITEHEIGHT
     public void calculatePositions(int baseDirection, int direction, int width, int height, int sprite_width, int sprite_height) {
         int toRotate = getRotationDegrees(baseDirection, direction);
-
         //getheight
     }
 

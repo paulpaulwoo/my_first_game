@@ -12,21 +12,23 @@ import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import personal.Background;
+import personal.Sounds.Sound;
 import personal.attacks.Slashattack;
 import personal.enemy.Amg1;
-import personal.enemy.Enemy;
 import personal.player.Player;
+import personal.attacks.Attack;
 //import personal.enemy.Amg1;
 
 
 public class GameEngine implements KeyListener {
+    public static boolean DEBUG = false;
     public static GameEngine engine;
     private Player player;
     private int keyPressed;
     private Background background;
     public JFrame frame;
     private JPanel mainPanel;
-    private ArrayList<Enemy> enemies;
+    private ArrayList<Entity> enemies;
     public ArrayList<Entity> toRemove = new ArrayList<>();
     private boolean rightkeyPressed;
     private boolean leftkeyPressed;
@@ -42,16 +44,19 @@ public class GameEngine implements KeyListener {
         
         toLoad.add(new loadedImage("effects/slash/slash (", ").png", 10, 1));
         loader = new Loader(toLoad);
+        int [] testSounds = {0, 1};
+        Sound.loadSounds(testSounds);
+
         spacePressed = false;
         rightkeyPressed = false;
         leftkeyPressed = false;
         upkeyPressed = false;
         downkeyPressed = false;
         background = new Background();
-        enemies = new ArrayList<Enemy>();
+        enemies = new ArrayList<Entity>();
         player = new Player();
 
-        Enemy a = new Amg1(player);
+        Amg1 a = new Amg1(player);
         enemies.add(a);
 
         mainPanel = new JPanel();
@@ -77,6 +82,13 @@ public class GameEngine implements KeyListener {
         frame.getLayeredPane().setLayer(player, 900);
         frame.getLayeredPane().setLayer(enemies.get(0), 500);
 
+        if (DEBUG) {
+            player.setOpaque(true);
+            for (int i = 0; i < enemies.size(); i++) {
+                enemies.get(i).setOpaque(true);
+            }
+        }
+        
         //Z LAYOUT END
         //frame.setLayout(null);
         frame.setSize(1024, 900);
@@ -153,6 +165,9 @@ public class GameEngine implements KeyListener {
         for (int i = 0; i < Entity.entities.size(); i++) {
             Entity.entities.get(i).update();
             frame.getLayeredPane().setLayer(Entity.entities.get(i), Entity.entities.get(i).getPosition()[1]);
+            if (Entity.entities.get(i) instanceof Attack) {
+                frame.getLayeredPane().setLayer(Entity.entities.get(i), 3000);
+            }
             Entity.entities.get(i).repaint();
         }
         for (int i = 0; i < toRemove.size(); i++) {

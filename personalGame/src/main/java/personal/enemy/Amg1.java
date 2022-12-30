@@ -5,9 +5,10 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import personal.player.Player;
 import java.awt.Graphics;
+import personal.Entity;
 
 import java.lang.Math;
-public class Amg1 extends Enemy {
+public class Amg1 extends Entity {
     private BufferedImage imageArray[][]; // i = state, j = frame
     private int lookDirection; // changed by change state, 1 : right, 2 : left, 3 : up, 4 : down, 5 : spawn
     private final int walkRight_totalFrames = 2;
@@ -17,7 +18,6 @@ public class Amg1 extends Enemy {
     private final int spawn_totalFrames = 50;
     private int currentFrame = 0;
     private int state; // 1: spawn
-    public int speed;
     private int totalImages;
     private boolean changeReady = false;
     private int attackRange = 100;
@@ -29,13 +29,10 @@ public class Amg1 extends Enemy {
     int secondaryAttackRange; // range in which not facing
 
     public Amg1(Player player) {
-        entities.add(this);
-        SPRITEWIDTH = 80;
-        SPRITEHEIGHT = 100;
-        WIDTH = 100;
-        HEIGHT = 100;
+        super(80, 100, 100, 100, 5, (int) (Math.random() * 820 + 50), (int) (Math.random() * 670 + 30));
+
         state = 5;
-        speed = 5;
+
         imageArray = new BufferedImage[9][];
         //setting X and Y coords
         position = new int[2];
@@ -197,7 +194,7 @@ public class Amg1 extends Enemy {
         this.setBounds(position[0], position[1], WIDTH, HEIGHT);
     }
 
-    @Override
+
     public void changeState(int state) {
         // TODO Auto-generated method stub
         if (this.state == state) {
@@ -265,7 +262,7 @@ public class Amg1 extends Enemy {
     }
 
 
-    @Override
+
     public void spawn() {
 
     }
@@ -280,7 +277,7 @@ public class Amg1 extends Enemy {
     }
 
 
-    @Override
+
     public void move(int direction) {
         // TODO Auto-generated method stub
 
@@ -310,17 +307,17 @@ public class Amg1 extends Enemy {
         
     }
 
-    @Override
+
     public void stunned() {
         // TODO Auto-generated method stub
         
     }
 
-    @Override
+
     public void attack() {
         
     }
-    @Override
+
     public void die() {
         // TODO Auto-generated method stub
         
