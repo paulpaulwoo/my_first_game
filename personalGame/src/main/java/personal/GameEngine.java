@@ -13,6 +13,7 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import personal.Background;
 import personal.Sounds.Sound;
+import personal.UI.HpBar;
 import personal.attacks.Slashattack;
 import personal.enemy.Amg1;
 import personal.player.Player;
@@ -23,6 +24,10 @@ import personal.attacks.Attack;
 public class GameEngine implements KeyListener {
     public static boolean DEBUG = false;
     public static GameEngine engine;
+    public static int frameWidth = 1024;
+    public static int frameHeight = 900;
+    public static Thread mainThread;
+    public static boolean run;
     private Player player;
     private int keyPressed;
     private Background background;
@@ -37,6 +42,7 @@ public class GameEngine implements KeyListener {
     private boolean spacePressed;
     public ArrayList<loadedImage> toLoad= new ArrayList<>();
     public Loader loader;
+    public static ArrayList<JPanel> uiComponents = new ArrayList<>();
 
     public GameEngine() {
         engine = this;
@@ -60,6 +66,8 @@ public class GameEngine implements KeyListener {
         enemies.add(a);
 
         mainPanel = new JPanel();
+
+
         mainPanel.add(background);
         //frame.add(background);
         //background.add(player);
@@ -82,6 +90,15 @@ public class GameEngine implements KeyListener {
         frame.getLayeredPane().setLayer(player, 900);
         frame.getLayeredPane().setLayer(enemies.get(0), 500);
 
+        //COMBAT SEQUENCE INIT
+        combatSequenceInit(player);
+
+
+        for (int i = 0; i < uiComponents.size(); i++) {
+            frame.getLayeredPane().add(uiComponents.get(i));
+            frame.getLayeredPane().setLayer(uiComponents.get(i), 3000);
+        }
+
         if (DEBUG) {
             player.setOpaque(true);
             for (int i = 0; i < enemies.size(); i++) {
@@ -95,6 +112,7 @@ public class GameEngine implements KeyListener {
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.addKeyListener(this);
+
     }
 
     public void run(GameEngine game) {
@@ -130,7 +148,9 @@ public class GameEngine implements KeyListener {
         }
     }
 
-
+    public void combatSequenceInit(Player player) {
+        uiComponents.add(new HpBar(player));
+    }
 
     
     public void keyUpdate() {
@@ -170,6 +190,9 @@ public class GameEngine implements KeyListener {
             }
             Entity.entities.get(i).repaint();
         }
+        for (int i = 0; i < uiComponents.size(); i++) {
+            uiComponents.get(i).repaint();
+        }
         for (int i = 0; i < toRemove.size(); i++) {
             Entity.entities.remove(toRemove.get(i));
             frame.getLayeredPane().remove(toRemove.get(i));
@@ -177,7 +200,11 @@ public class GameEngine implements KeyListener {
     }
 
 
-    
+    public static void gameOverSequence() {
+        System.out.println("gameOver");
+        stop();
+    }
+
     @Override
     public void keyReleased(KeyEvent e) {
         // Called when a key is released
@@ -199,7 +226,27 @@ public class GameEngine implements KeyListener {
         }
         
     }
+
+    public static void start() {
+        run = true;
+        mainThread = new Thread(() -> {
+            GameEngine game = new GameEngine();
+            while (run) {
+                try {
+                    Thread.sleep(20);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                game.update();
+            }
+        });
+        mainThread.start();
+    }
     
+    public static void stop() {
+        run = false;
+    }
+
     @Override
     public void keyTyped(KeyEvent e) {
         // Called when a character is typed

@@ -13,7 +13,7 @@ public class Entity extends JPanel {
     public int[] position;// index 0: x coords
                             // index 1: y coords 
     public static ArrayList<Entity> entities = new ArrayList<>();       
-    public int iFrames = 0;
+    public int iFrames;
     public int SPRITEWIDTH;
     public int SPRITEHEIGHT;
     public int WIDTH;
@@ -21,9 +21,14 @@ public class Entity extends JPanel {
     public int speed;
     public static int movebuffer = 10;
     public int[] spritePosition;
+    public int maxHP;
+    public int currentHP;
+    public boolean invincible;
 
-    public Entity(int SPRITEWIDTH, int SPRITEHEIGHT, int WIDTH, int HEIGHT, int speed, int xpos, int ypos) {
+    public Entity(int SPRITEWIDTH, int SPRITEHEIGHT, int WIDTH, int HEIGHT, int speed, int xpos, int ypos, int maxHP, int currentHP) {
         //TODO
+        iFrames = 0;
+        invincible = false;
         this.SPRITEWIDTH = SPRITEWIDTH;
         this.SPRITEHEIGHT = SPRITEHEIGHT;
         this.WIDTH = WIDTH;
@@ -38,6 +43,8 @@ public class Entity extends JPanel {
         this.setSize(WIDTH, HEIGHT);
         entities.add(this);
         this.setOpaque(false);
+        this.currentHP = currentHP;
+        this.maxHP = maxHP;
     }
 
     public static boolean colisionCheck(int direction, Entity player, Entity enemy) { // false if collided
@@ -105,7 +112,24 @@ public class Entity extends JPanel {
         return true;
     }
 
-    
+    public void takeDamage(int damage, int iFrames) {
+        this.currentHP -= damage;
+        this.iFrames = iFrames;
+        this.invincible = true;
+        if (currentHP <= 0) {
+            //TRIGGER DEATH
+            this.iFrames = 0;
+            deathSequence();
+        }
+    }
+
+    public void changeState(int state) {
+        //for override
+    }
+
+    public void deathSequence() {
+        //for override
+    }
     
 
     public int[] getPosition() {

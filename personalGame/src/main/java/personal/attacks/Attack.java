@@ -33,7 +33,7 @@ public class Attack extends Entity {
     int soundHitId;
 
     public Attack(int totalFrames, int baseDirection, int direction, int animationFrames, int divider, BufferedImage[] imageArray, Entity source, boolean piercing, int damage, int iFrames, int sprite_width, int sprite_height, int width, int height, int soundId, int soundHitId) {
-        super(sprite_width, sprite_height, width, height, 0, 0, 0);
+        super(sprite_width, sprite_height, width, height, 0, 0, 0, -1, -1);
         this.totalFrames = totalFrames;
         this.direction = direction;
         this.baseDirection = baseDirection;
@@ -68,7 +68,6 @@ public class Attack extends Entity {
         } else if (direction == 3) {
             returnpos[0] = source.spritePosition[0] + ((source.SPRITEWIDTH - width) / 2);
             returnpos[1] = source.spritePosition[1] - SPRITEHEIGHT / 2;
-            System.out.println("Original pos : " + position[0] + ", new pos :" + returnpos[0]) ;
         } else if (direction == 4) {
             returnpos[0] = source.spritePosition[0] + ((source.SPRITEWIDTH - width) / 2);
             returnpos[1] = source.spritePosition[1] + SPRITEHEIGHT;
@@ -76,8 +75,6 @@ public class Attack extends Entity {
         return returnpos;
     }
     public static int getRotationDegrees(int originalDirection, int direction) {
-        System.out.println("OriginalDirection :" + originalDirection);
-        System.out.println("direction :" + direction);
         if (originalDirection == direction) {
             return 0;
         } else if (originalDirection == 1) {
@@ -156,7 +153,7 @@ public class Attack extends Entity {
             GameEngine.engine.toRemove.add(this);
         }
         for (int i = 0; i < entities.size(); i++) {
-            if ((colisionCheck(direction, this, entities.get(i)) == false) && (!hitTracker.contains(entities.get(i)))) {
+            if ((colisionCheck(direction, this, entities.get(i)) == false) && (!hitTracker.contains(entities.get(i))) && (!entities.get(i).invincible)) {
                 attackLogic(source, entities.get(i));
                 hitTracker.add(entities.get(i));
             }

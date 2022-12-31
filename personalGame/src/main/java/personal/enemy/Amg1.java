@@ -8,8 +8,10 @@ import java.awt.Graphics;
 import personal.Entity;
 import personal.GameEngine;
 import personal.attacks.Slashattack;
-
+import java.awt.Graphics2D;
+import java.awt.AlphaComposite;
 import java.lang.Math;
+
 public class Amg1 extends Entity {
     private BufferedImage imageArray[][]; // i = state, j = frame
     private int lookDirection; // changed by change state, 1 : right, 2 : left, 3 : up, 4 : down, 5 : spawn
@@ -28,9 +30,10 @@ public class Amg1 extends Entity {
     private boolean stunned = false;
     private int divider = 1;
     private int delay = 0;
+    private float transparancy = 1f;
 
     public Amg1(Player player) {
-        super(80, 100, 100, 100, 5, (int) (Math.random() * 820 + 50), (int) (Math.random() * 670 + 30));
+        super(80, 100, 100, 100, 5, (int) (Math.random() * 820 + 50), (int) (Math.random() * 670 + 30), 100, 100);
 
         state = 5;
 
@@ -252,7 +255,7 @@ public class Amg1 extends Entity {
         this.setBounds(position[0], position[1], WIDTH, HEIGHT);
     }
 
-
+    @Override
     public void changeState(int state) {
         // TODO Auto-generated method stub
         if (this.state == state) {
@@ -415,6 +418,9 @@ public class Amg1 extends Entity {
         }
         super.paintComponent(g);
 //        imageArray_walkRight[currentFrame].drawImage()
+        Graphics2D g2d = (Graphics2D)(g);
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparancy));
+        
         g.drawImage(imageArray[state][currentFrame / divider], 0, 0, this.getWidth(), this.getHeight(), this);
     }
 }

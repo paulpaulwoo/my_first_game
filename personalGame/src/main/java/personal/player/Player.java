@@ -9,6 +9,8 @@ import personal.GameEngine;
 import personal.attacks.Slashattack;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
+import java.awt.Graphics2D;
+import java.awt.AlphaComposite;
 //sprite created by sylvius fischer
 public class Player extends Entity{
     
@@ -24,13 +26,16 @@ public class Player extends Entity{
     private int totalImages = 1;
     private int divider = 1;
     public int attackFrames = 10;
+    private float transparancy = 1f;
     int delay = 0;
     private boolean changeReady = false;
+    
 
     public Player() {
-        super(100, 70, 100, 100, 10, 500, 350);
+        super(100, 70, 100, 100, 10, 500, 350, 100, 100);
+        invincible = false;
         this.state = 1;
-        imageArray = new BufferedImage[14][];
+        imageArray = new BufferedImage[19][];
         this.lookDirection = 1;
         //setting X and Y coords
         //Walk right animation 
@@ -153,10 +158,56 @@ public class Player extends Entity{
             }
         }
 
+        imageArray[14] = new BufferedImage[1]; // Death
+        for (int i = 0; i < 1; i++) {
+            try {
+                imageArray[14][i] = ImageIO.read(getClass().getResource("sprites/walkDown_" + (2) + ".png"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        
+        imageArray[15] = new BufferedImage[1];
+        for (int i = 0; i < 1; i++) {
+            try {
+                imageArray[15][i] = ImageIO.read(getClass().getResource("sprites/walkRight_" + (1) + ".png"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        //Look left animation
+        imageArray[16] = new BufferedImage[1];
+        for (int i = 0; i < 1; i++) {
+            try {
+                imageArray[16][i] = ImageIO.read(getClass().getResource("sprites/walkLeft_" + (2) + ".png"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        //Look up animation
+        imageArray[17] = new BufferedImage[1];
+        for (int i = 0; i < 1; i++) {
+            try {
+                imageArray[17][i] = ImageIO.read(getClass().getResource("sprites/walkUp_" + (2) + ".png"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        //Look down animation
+        imageArray[18] = new BufferedImage[1];
+        for (int i = 0; i < 1; i++) {
+            try {
+                imageArray[18][i] = ImageIO.read(getClass().getResource("sprites/walkDown_" + (2) + ".png"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         changeState(0);
     }
-
+    @Override
     public void changeState(int state) {
         if (!changeReady) {
             return;
@@ -254,7 +305,40 @@ public class Player extends Entity{
                 divider = 10;
                 changeReady = false;
                 break;
+                
+                //DEATH
+                case 14: totalImages = 1;
+                currentFrame = 0;
+                divider = 150;
+                changeReady = false;
+                this.state = 14 + lookDirection;
+                break;
+
+                case 15: totalImages = imageArray[15].length;
+                currentFrame = 0;
+                this.state = state;
+                divider = 120;
+                break;
+
+                case 16: totalImages = imageArray[16].length;
+                currentFrame = 0;
+                this.state = state;
+                divider = 120;
+                break;
+
+                case 17: totalImages = imageArray[17].length;
+                currentFrame = 0;
+                this.state = state;
+                divider = 120;
+                break;
+
+                case 18: totalImages = imageArray[18].length;
+                currentFrame = 0;
+                this.state = state;
+                divider = 120;
+                break;
             }
+            
 
         }
     }
@@ -265,13 +349,23 @@ public class Player extends Entity{
         if (delay > 0) {
             delay--;
         }
+        if (iFrames > 0) {
+            iFrames--;
+            transparancy = 1 - ((0.5f) * ((iFrames / 5) % 2));
+            if (iFrames == 0) {
+                invincible = false;
+            }
+        }
+
         if (currentFrame >= imageArray[state].length * divider)  {
             currentFrame = 0;
             changeReady = true;
         }
         super.paintComponent(g);
         //imageArray_walkRight[currentFrame].drawImage()
-        g.drawImage(imageArray[state][currentFrame / divider], 0, 0, this.getWidth(), this.getHeight(), this);
+        Graphics2D g2d = (Graphics2D)(g);
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparancy));
+        g2d.drawImage(imageArray[state][currentFrame / divider], 0, 0, this.getWidth(), this.getHeight(), this);
     }
 
     public void handleKey (int keyPressed) {
@@ -315,6 +409,25 @@ public class Player extends Entity{
         delay = attackFrames;
     }
 
+    @Override
+    public void deathSequence() {
+        changeState(14);
+        invincible = true;
+    }
+    public void fade() {
+        if (transparancy > 0) {
+            transparancy -= 0.02f;
+            if (transparancy <= 0) {
+                GameEngine.gameOverSequence();
+                transparancy = 0.01f;
+            }
+        } else {
+            System.out.println("Death over");
+            GameEngine.gameOverSequence();
+            
+        }
+        
+    }
 
     public void move (int direction) {
         switch (direction) {
@@ -373,6 +486,21 @@ public class Player extends Entity{
             break;
             case 13:
             attack(4);
+            break;
+            case 14:
+            fade();
+            break;
+            case 15:
+            fade();
+            break;
+            case 16:
+            fade();
+            break;
+            case 17:
+            fade();
+            break;
+            case 18:
+            fade();
             break;
         }
     }
