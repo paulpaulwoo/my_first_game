@@ -1,22 +1,12 @@
 package personal;
-import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Map;
-
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
-import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
-import personal.Background;
 import personal.Sounds.Sound;
 import personal.UI.HpBar;
-import personal.attacks.Slashattack;
 import personal.enemy.Amg;
-import personal.enemy.Amg1;
 import personal.player.Player;
 import personal.attacks.Attack;
 //import personal.enemy.Amg1;
@@ -66,7 +56,6 @@ public class GameEngine implements KeyListener {
         enemies = new ArrayList<Entity>();
         player = new Player();
 
-        //Amg1 a = new Amg1(player);
         Amg a = new Amg(player, 200, 200);
         enemies.add(a);
 

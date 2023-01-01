@@ -1,9 +1,7 @@
 package personal.player;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
 import javax.imageio.ImageIO;
-import javax.swing.JPanel;
 import personal.Entity;
 import personal.GameEngine;
 import personal.attacks.Slashattack;
@@ -23,7 +21,6 @@ public class Player extends Entity{
     private final int walkDown_totalFrames = 4;
     private int currentFrame = 0;
     private int state;
-    private int totalImages = 1;
     private int divider = 1;
     public int attackFrames = 10;
     private float transparancy = 1f;
@@ -216,90 +213,90 @@ public class Player extends Entity{
             return;
         } else {
             switch (state) {
-                case 0: totalImages = 1;
+                case 0: 
                 currentFrame = 0;
                 this.state = 4 + lookDirection;
                 break;
 
-                case 1: totalImages = imageArray[1].length;
+                case 1: 
                 currentFrame = 0;
                 lookDirection = 1;
                 this.state = state;
                 divider = 8;
                 break;
 
-                case 2: totalImages = imageArray[2].length;
+                case 2: 
                 currentFrame = 0;
                 lookDirection = 2;
                 this.state = state;
                 divider = 8;
                 break;
 
-                case 3: totalImages = imageArray[3].length;
+                case 3: 
                 currentFrame = 0;
                 lookDirection = 3;
                 this.state = state;
                 divider = 8;
                 break;
 
-                case 4: totalImages = imageArray[4].length;
+                case 4: 
                 currentFrame = 0;
                 lookDirection = 4;
                 this.state = state;
                 divider = 8;
                 break;
 
-                case 5: totalImages = imageArray[5].length;
+                case 5: 
                 currentFrame = 0;
                 this.state = state;
                 divider = 8;
                 break;
 
-                case 6: totalImages = imageArray[6].length;
+                case 6: 
                 currentFrame = 0;
                 this.state = state;
                 divider = 8;
                 break;
 
-                case 7: totalImages = imageArray[7].length;
+                case 7: 
                 currentFrame = 0;
                 this.state = state;
                 divider = 8;
                 break;
 
-                case 8: totalImages = imageArray[8].length;
+                case 8: 
                 currentFrame = 0;
                 this.state = state;
                 divider = 8;
                 break;
 
-                case 9: totalImages = 1;
+                case 9: 
                 currentFrame = 0;
                 changeState(9 + lookDirection);
                 break;
 
-                case 10: totalImages = attackFrames;
+                case 10: 
                 currentFrame = 0;
                 this.state = state;
                 divider = 10;
                 changeReady = false;
                 break;
 
-                case 11: totalImages = attackFrames;
+                case 11: 
                 currentFrame = 0;
                 this.state = state;
                 divider = 10;
                 changeReady = false;
                 break;
 
-                case 12: totalImages = attackFrames;
+                case 12: 
                 currentFrame = 0;
                 this.state = state;
                 divider = 10;
                 changeReady = false;
                 break;
 
-                case 13: totalImages = attackFrames;
+                case 13: 
                 currentFrame = 0;
                 this.state = state;
                 divider = 10;
@@ -307,32 +304,32 @@ public class Player extends Entity{
                 break;
                 
                 //DEATH
-                case 14: totalImages = 1;
+                case 14: 
                 currentFrame = 0;
                 divider = 150;
                 changeReady = false;
                 this.state = 14 + lookDirection;
                 break;
 
-                case 15: totalImages = imageArray[15].length;
+                case 15: 
                 currentFrame = 0;
                 this.state = state;
                 divider = 120;
                 break;
 
-                case 16: totalImages = imageArray[16].length;
+                case 16: 
                 currentFrame = 0;
                 this.state = state;
                 divider = 120;
                 break;
 
-                case 17: totalImages = imageArray[17].length;
+                case 17: 
                 currentFrame = 0;
                 this.state = state;
                 divider = 120;
                 break;
 
-                case 18: totalImages = imageArray[18].length;
+                case 18: 
                 currentFrame = 0;
                 this.state = state;
                 divider = 120;
@@ -422,7 +419,6 @@ public class Player extends Entity{
                 transparancy = 0.01f;
             }
         } else {
-            System.out.println("Death over");
             GameEngine.gameOverSequence();
             
         }

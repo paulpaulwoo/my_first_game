@@ -1,14 +1,9 @@
 package personal.Sounds;
 
-import java.applet.AudioClip;
 import java.util.HashMap;
-import java.util.HashSet;
-
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.swing.JOptionPane;
 
 public class Sound {
   /* 

@@ -5,9 +5,6 @@ import personal.GameEngine;
 import personal.Sounds.Sound;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import javax.imageio.ImageIO;
-import personal.player.Player;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.HashSet;
@@ -158,12 +155,6 @@ public class Attack extends Entity {
                 hitTracker.add(entities.get(i));
             }
         }
-    }
-
-    //need to set Position, WIDTH, HEIGHT, SPRITEWIDTH, SPRITEHEIGHT
-    public void calculatePositions(int baseDirection, int direction, int width, int height, int sprite_width, int sprite_height) {
-        int toRotate = getRotationDegrees(baseDirection, direction);
-        //getheight
     }
 
     @Override
