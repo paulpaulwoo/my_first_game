@@ -12,7 +12,6 @@ public class Slashattack extends Attack {
 
     @Override
     public void attackLogic(Entity source, Entity target) {
-        System.out.println("Slash Attack");
         Sound.playSound(soundHitId);
         target.takeDamage(this.damage, this.iFrames);
     }

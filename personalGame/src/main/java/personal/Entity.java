@@ -61,17 +61,9 @@ public class Entity extends JPanel {
                 return true;
             }
         }
-        /* 
-        System.out.println("player coords: " + player.getPosition()[0] + ", " + player.getPosition()[1]+ "\n" +
-        "dimensions: " + player.WIDTH + ", " + player.HEIGHT + ", " + player.SPRITEWIDTH + ", " + player.SPRITEHEIGHT);
-        System.out.println("enemy coords: " + enemy.getPosition()[0] + ", " + enemy.getPosition()[1]+ "\n" +
-        "dimensions: " + enemy.SPRITEWIDTH + ", " + enemy.SPRITEHEIGHT);
-        */
-        //DEBUG
-        
+
 
         if (direction == 1) {
-            //System.out.println("colision check right");
             if (((((playerPosition[0] + player.SPRITEWIDTH + movebuffer >= enemyPosition[0]) && (playerPosition[0] + player.SPRITEWIDTH + movebuffer <= enemyPosition[0] + enemy.SPRITEWIDTH)) 
                     ||((playerPosition[0] + movebuffer >= enemyPosition[0]) && (playerPosition[0] + movebuffer <= enemyPosition[0] + enemy.SPRITEWIDTH)))
                 && (((((playerPosition[1] + (player.SPRITEHEIGHT) >= enemyPosition[1] + enemy.SPRITEHEIGHT / 2) && (playerPosition[1] + (player.SPRITEHEIGHT) <= enemyPosition[1] +enemy.SPRITEHEIGHT))))

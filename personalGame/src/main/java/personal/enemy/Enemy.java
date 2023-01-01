@@ -1,6 +1,8 @@
 package personal.enemy;
 
 import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import personal.player.Player;
@@ -11,133 +13,69 @@ import personal.attacks.Slashattack;
 import java.awt.Graphics2D;
 import java.awt.AlphaComposite;
 import java.lang.Math;
+import java.util.Map;
 
-public class Amg1 extends Entity {
-    private BufferedImage imageArray[][]; // i = state, j = frame
-    private int lookDirection; // changed by change state, 1 : right, 2 : left, 3 : up, 4 : down, 5 : spawn
-    private final int walkRight_totalFrames = 2;
-    private final int walkLeft_totalFrames = 2;
-    private final int walkUp_totalFrames = 2;
-    private final int walkDown_totalFrames = 2;
-    private final int spawn_totalFrames = 50;
-    private int currentFrame = 0;
-    private int state; // 1: spawn
-    private int totalImages;
-    private boolean changeReady = false;
-    private int attackRange = 65;
-    private int attackWidth = 65;
-    private Player player;
-    private boolean stunned = false;
-    private int divider = 1;
-    private int delay = 0;
-    private float transparancy = 1f;
+import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonSyntaxException;
 
-    public Amg1(Player player) {
-        super(80, 100, 100, 100, 5, (int) (Math.random() * 820 + 50), (int) (Math.random() * 670 + 30), 100, 100);
+public class Enemy extends Entity {
+    protected boolean DEBUG = false;
+    protected BufferedImage imageArray[][]; // i = state, j = frame
+    protected int lookDirection; // changed by change state, 1 : right, 2 : left, 3 : up, 4 : down, 5 : spawn
 
-        state = 5;
+    protected int[] animationLengths;
+    protected String[] animationPrefixes;
+    protected String[] animationSuffixes;
+    protected int[] dividers;
+    protected int currentFrame = 0;
+    protected int state = 1; // 1: spawn
+    protected int totalImages;
+    protected boolean changeReady = false;
+    protected int attackRange;
+    protected int attackWidth;
+    protected Player player;
+    protected boolean stunned = false;
+    protected int divider = 1;
+    protected int delay = 0;
+    protected float transparancy = 1f;
+    protected int attackDamage;
 
-        imageArray = new BufferedImage[10][];
-        //setting X and Y coords
-        //setComponentZOrder(this, position[1]);
+
+    public Enemy(int SPRITEWIDTH, int SPRITEHEIGHT, int WIDTH, int HEIGHT, int speed, int xpos, int ypos, int maxHP, int currentHP, int states, int attackRange, int attackWidth, Player player,
+        int[] animationLengths, String[] animationPrefixes, String[] animationSuffixes, int[] dividers) {
+        super(SPRITEWIDTH, SPRITEHEIGHT, WIDTH, HEIGHT, speed, xpos, ypos, maxHP, currentHP);
+        imageArray = new BufferedImage[states][];
         this.player = player;
-        
+        this.attackRange = attackRange;
+        this.attackWidth = attackWidth;
+        this.animationLengths = animationLengths;
+        this.animationPrefixes = animationPrefixes;
+        this.animationSuffixes = animationSuffixes;
+        this.dividers = dividers;
 
-        this.setSize(WIDTH, HEIGHT);
-
-
-
-        imageArray[1] = new BufferedImage[walkRight_totalFrames];
-        for (int i = 0; i < walkRight_totalFrames; i++) {
-            try {
-                imageArray[1][i] = ImageIO.read(getClass().getResource("last-guardian-sprites/amg1_rt" + (1+ i) + ".gif"));
-            } catch (IOException e) {
-                e.printStackTrace();
+        for (int i = 0; i < states; i++) {
+            imageArray[i] = new BufferedImage[animationLengths[i]];
+            if (DEBUG) {
+                System.out.println("i: " + i + ", j length: " + animationLengths[i]);
+            }
+            for (int j = 0; j < animationLengths[i]; j++) {
+                try {
+                    if (DEBUG) {
+                        System.out.println(animationPrefixes[i] + (1+ j) + animationSuffixes[i]);
+                    }
+                    imageArray[i][j] = ImageIO.read(getClass().getResource(animationPrefixes[i] + (1+ j) + animationSuffixes[i]));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
-
-        //Walk left animation
-        imageArray[2] = new BufferedImage[walkLeft_totalFrames];
-        for (int i = 0; i < walkLeft_totalFrames; i++) {
-            try {
-                imageArray[2][i] = ImageIO.read(getClass().getResource("last-guardian-sprites/amg1_lf" + (1+ i) + ".gif"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        imageArray[3] = new BufferedImage[walkUp_totalFrames];
-        for (int i = 0; i < walkUp_totalFrames; i++) {
-            try {
-                imageArray[3][i] = ImageIO.read(getClass().getResource("last-guardian-sprites/amg1_bk" + (1+ i) + ".gif"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        imageArray[4] = new BufferedImage[walkDown_totalFrames];
-        for (int i = 0; i < walkDown_totalFrames; i++) {
-            try {
-                imageArray[4][i] = ImageIO.read(getClass().getResource("last-guardian-sprites/amg1_fr" + (1+ i) + ".gif"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        imageArray[5] = new BufferedImage[spawn_totalFrames];
-        for (int i = 0; i < spawn_totalFrames; i++) {
-            String adder = new String();
-            if (i < 9) {
-                adder = "0" + (1 + i) ;
-            } else {
-                adder = "" + (1 + i);
-            }
-            try {
-                imageArray[5][i] = ImageIO.read(getClass().getResource("../effects/spawn/00" + adder + ".png"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        imageArray[6] = new BufferedImage[walkRight_totalFrames];
-        for (int i = 0; i < walkRight_totalFrames; i++) {
-            try {
-                imageArray[6][i] = ImageIO.read(getClass().getResource("last-guardian-sprites/amg1_rt" + (1+ i) + ".gif"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        //Walk left animation
-        imageArray[7] = new BufferedImage[walkLeft_totalFrames];
-        for (int i = 0; i < walkLeft_totalFrames; i++) {
-            try {
-                imageArray[7][i] = ImageIO.read(getClass().getResource("last-guardian-sprites/amg1_lf" + (1+ i) + ".gif"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        imageArray[8] = new BufferedImage[walkUp_totalFrames];
-        for (int i = 0; i < walkUp_totalFrames; i++) {
-            try {
-                imageArray[8][i] = ImageIO.read(getClass().getResource("last-guardian-sprites/amg1_bk" + (1+ i) + ".gif"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        imageArray[9] = new BufferedImage[walkDown_totalFrames];
-        for (int i = 0; i < walkDown_totalFrames; i++) {
-            try {
-                imageArray[9][i] = ImageIO.read(getClass().getResource("last-guardian-sprites/amg1_fr" + (1+ i) + ".gif"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
 
         this.setOpaque(false);
-    }
+        this.changeState(5);
 
+
+    }
 
     @Override
     public int[] getPosition() {
@@ -145,12 +83,7 @@ public class Amg1 extends Entity {
     }
     
     public int inAttackRange() { 
-        // return values: 0 if not in range
-        // 1 if right
-        // 2 if left
-        // 3 if up
-        // 4 if down
-        
+
         if ((((spritePosition[0] + SPRITEWIDTH + attackRange > player.spritePosition[0]) && (spritePosition[0] + SPRITEWIDTH < player.spritePosition[0])) 
             && ((spritePosition[1] + ((SPRITEHEIGHT - attackWidth) / 2) < player.spritePosition[1] + player.SPRITEHEIGHT) && (spritePosition[1] + ((SPRITEHEIGHT + attackWidth) / 2) > player.spritePosition[1] + (player.SPRITEHEIGHT / 2)))) 
         ) {
@@ -182,9 +115,6 @@ public class Amg1 extends Entity {
         if (changeReady) {
             int attackDirection = inAttackRange();
             if (attackDirection != 0) {
-                //DEBUG
-                System.out.println("IN ATTACK RANGE");
-                //DEBUG
                 changeState(attackDirection);
                 return;
             } else if (stunned) {
@@ -195,30 +125,25 @@ public class Amg1 extends Entity {
                 if (Math.abs(position[0] - this.player.getPosition()[0]) >= Math.abs(position[1] - this.player.getPosition()[1])) {
                     //move horizontal
                     if (position[0] - this.player.getPosition()[0] < 0) {
-                        System.out.println("Right");
                         changeState(1);
                         return;
                     } else {
-                        System.out.println("Left");
                         changeState(2);
                         return;
                     }
                 } else {
                     //move vertical
                     if (position[1] - this.player.getPosition()[1] > 0) {
-                        System.out.println("Up");
                         changeState(3);
                         return;
                     } else {
-                        System.out.println("Down");
                         changeState(4);
                         return;
                     }
                 }
             }
         } else {
-            // execute the actions based on state
-            
+
             switch (state) {
                 case 0:
                     break;
@@ -248,7 +173,20 @@ public class Amg1 extends Entity {
                 case 9:
                     attack(4);
                     break;
-                
+                case 10:
+                break;
+                case 11:
+                    fade();
+                break;
+                case 12:
+                    fade();
+                break;
+                case 13:
+                    fade();
+                break;
+                case 14:
+                    fade();
+                break;
             }
         }
 
@@ -257,6 +195,7 @@ public class Amg1 extends Entity {
 
     @Override
     public void changeState(int state) {
+        System.out.println("WARNING: DIDNT OVERRITE ENEMY CHANGESTATE!");
         // TODO Auto-generated method stub
         if (this.state == state) {
             changeReady = false;
@@ -272,58 +211,88 @@ public class Amg1 extends Entity {
                 currentFrame = 0;
                 lookDirection = 1;
                 this.state = state;
-                divider = 8;
+                divider = dividers[state];
                 break;
 
                 case 2: totalImages = imageArray[2].length;
                 currentFrame = 0;
                 lookDirection = 2;
                 this.state = state;
-                divider = 8;
+                divider = dividers[state];
                 break;
 
                 case 3: totalImages = imageArray[3].length;
                 currentFrame = 0;
                 lookDirection = 3;
                 this.state = state;
-                divider = 8;
+                divider = dividers[state];
                 break;
 
                 case 4: totalImages = imageArray[4].length;
                 currentFrame = 0;
                 lookDirection = 4;
                 this.state = state;
-                divider = 8;
+                divider = dividers[state];
                 break;
 
                 case 5: totalImages = imageArray[5].length;
                 currentFrame = 0;
                 this.state = state;
-                divider = 1;
+                divider = dividers[state];
                 break;
 
                 case 6: totalImages = imageArray[6].length;
                 currentFrame = 0;
                 this.state = state;
-                divider = 5;
+                divider = dividers[state];
                 break;
 
                 case 7: totalImages = imageArray[7].length;
                 currentFrame = 0;
                 this.state = state;
-                divider = 5;
+                divider = dividers[state];
                 break;
 
                 case 8: totalImages = imageArray[8].length;
                 currentFrame = 0;
                 this.state = state;
-                divider = 5;
+                divider = dividers[state];
                 break;
 
                 case 9: totalImages = imageArray[9].length;
                 currentFrame = 0;
                 this.state = state;
-                divider = 5;
+                divider = dividers[state];
+                break;
+
+                case 10: totalImages = 1;
+                currentFrame = 0;
+                divider = dividers[state];
+                this.state = lookDirection + 10;
+                break;
+                
+                case 11: totalImages = imageArray[11].length;
+                currentFrame = 0;
+                this.state = state;
+                divider = dividers[state];
+                break;
+
+                case 12: totalImages = imageArray[12].length;
+                currentFrame = 0;
+                this.state = state;
+                divider = dividers[state];
+                break;
+
+                case 13: totalImages = imageArray[13].length;
+                currentFrame = 0;
+                this.state = state;
+                divider = dividers[state];
+                break;
+
+                case 14: totalImages = imageArray[14].length;
+                currentFrame = 0;
+                this.state = state;
+                divider = dividers[state];
                 break;
             }
         }
@@ -345,7 +314,25 @@ public class Amg1 extends Entity {
         return true;
     }
 
+    @Override
+    public void deathSequence() {
+        changeState(10);
+        invincible = true;
+    }
 
+
+
+    public void fade() {
+        if (transparancy > 0) {
+            transparancy -= 0.02f;
+            if (transparancy <= 0) {
+                GameEngine.engine.toRemove.add(this);
+                transparancy = 0.01f;
+            }
+        } else {
+            GameEngine.engine.toRemove.add(this);
+        }
+    }
 
     public void move(int direction) {
         // TODO Auto-generated method stub
@@ -388,6 +375,7 @@ public class Amg1 extends Entity {
 
 
     public void attack(int direction) {
+        System.out.println("WARNING: DIDNT OVERRIDE ATTACK!");
         if (delay > 0) {
             return;
         }
@@ -400,7 +388,7 @@ public class Amg1 extends Entity {
 
     public void die() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -410,6 +398,14 @@ public class Amg1 extends Entity {
 
         if (delay > 0) {
             delay--;
+        }
+
+        if (iFrames > 0) {
+            iFrames--;
+            transparancy = 1 - ((0.5f) * ((iFrames / 5) % 2));
+            if (iFrames == 0) {
+                invincible = false;
+            }
         }
 
         if (currentFrame >= imageArray[state].length * divider)  {
@@ -423,4 +419,5 @@ public class Amg1 extends Entity {
         
         g.drawImage(imageArray[state][currentFrame / divider], 0, 0, this.getWidth(), this.getHeight(), this);
     }
+
 }

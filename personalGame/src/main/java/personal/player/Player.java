@@ -209,7 +209,7 @@ public class Player extends Entity{
     }
     @Override
     public void changeState(int state) {
-        if (!changeReady) {
+        if (!changeReady && (state != 14)) {
             return;
         }
         if (this.state == state) {

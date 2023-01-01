@@ -1,0 +1,22 @@
+{
+    "amg1": {
+        "name": "amg1",
+        "SPRITEWIDTH": 80,
+        "SPRITEHEIGHT": 100,
+        "WIDTH": 100,
+        "HEIGHT": 100,
+        "speed": 5,
+        "maxHP": 100,
+        "currentHP": 100,
+        "states": 15,
+        "attackDamage" : 10,
+        "iframes" : 15,
+        "animationLengths": [0, 2, 2, 2, 2, 50, 2, 2, 2, 2, 0, 2, 2, 2, 2],
+        "animationPrefixes": ["", "last-guardian-sprites/amg1_rt", "last-guardian-sprites/amg1_lf", "last-guardian-sprites/amg1_bk", "last-guardian-sprites/amg1_fr", "../effects/spawn/spawn (", "last-guardian-sprites/amg1_rt", "last-guardian-sprites/amg1_lf", "last-guardian-sprites/amg1_bk", "last-guardian-sprites/amg1_fr", "last-guardian-sprites/amg1_rt", "last-guardian-sprites/amg1_lf", "last-guardian-sprites/amg1_bk", "last-guardian-sprites/amg1_fr"],
+        "animationSuffixes": [".gif",".gif",".gif",".gif",".gif",").png",".gif",".gif",".gif",".gif",".gif",".gif",".gif",".gif",".gif"],
+        "dividers": [1, 8, 8, 8, 8, 1, 5, 5, 5, 5, 150, 150, 150, 150, 150]
+    },
+    "amg2": {
+
+    }
+}

@@ -15,6 +15,7 @@ import personal.Background;
 import personal.Sounds.Sound;
 import personal.UI.HpBar;
 import personal.attacks.Slashattack;
+import personal.enemy.Amg;
 import personal.enemy.Amg1;
 import personal.player.Player;
 import personal.attacks.Attack;
@@ -45,24 +46,28 @@ public class GameEngine implements KeyListener {
     public static ArrayList<JPanel> uiComponents = new ArrayList<>();
 
     public GameEngine() {
-        engine = this;
-        frame = new JFrame();
-        
-        toLoad.add(new loadedImage("effects/slash/slash (", ").png", 10, 1));
-        loader = new Loader(toLoad);
-        int [] testSounds = {0, 1};
-        Sound.loadSounds(testSounds);
 
+        frame = new JFrame();
+        loader = new Loader(toLoad);
+        
         spacePressed = false;
         rightkeyPressed = false;
         leftkeyPressed = false;
         upkeyPressed = false;
         downkeyPressed = false;
+
+        toLoad.add(new loadedImage("./effects/slash/slash (", ").png", 10, 1));
+        loader = new Loader(toLoad);
+        //loader.Load(toLoad);
+        int [] testSounds = {0, 1};
+        Sound.loadSounds(testSounds);
+
         background = new Background();
         enemies = new ArrayList<Entity>();
         player = new Player();
 
-        Amg1 a = new Amg1(player);
+        //Amg1 a = new Amg1(player);
+        Amg a = new Amg(player, 200, 200);
         enemies.add(a);
 
         mainPanel = new JPanel();
@@ -112,6 +117,10 @@ public class GameEngine implements KeyListener {
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.addKeyListener(this);
+
+    }
+
+    public void initCombat() {
 
     }
 
@@ -227,17 +236,19 @@ public class GameEngine implements KeyListener {
         
     }
 
+    //START OF APP
     public static void start() {
         run = true;
+        engine = new GameEngine();
         mainThread = new Thread(() -> {
-            GameEngine game = new GameEngine();
+            
             while (run) {
                 try {
                     Thread.sleep(20);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                game.update();
+                engine.update();
             }
         });
         mainThread.start();
