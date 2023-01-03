@@ -201,7 +201,7 @@ public class Player extends Entity{
                 e.printStackTrace();
             }
         }
-
+        this.setBounds(position[0], position[1], this.WIDTH,  this.HEIGHT );
         changeState(0);
     }
     @Override

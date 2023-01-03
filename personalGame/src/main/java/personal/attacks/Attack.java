@@ -10,24 +10,24 @@ import java.awt.Graphics2D;
 import java.util.HashSet;
 
 public class Attack extends Entity {
-    public int totalFrames;
-    int baseDirection;
-    int direction;
-    int animationFrames;
-    int divider;
-    int currentFrame;
-    String imagePrefix;
-    String imageSuffix;
-    private BufferedImage imageArray[];
-    private BufferedImage displayArray[];
-    public Entity source;
-    boolean piercing;
-    int damage;
-    int iFrames;
-    int effectId;
-    HashSet<Entity> hitTracker;
-    int soundId;
-    int soundHitId;
+    public int totalFrames; //total frames of attack
+    int baseDirection; //direction of attack according to base image
+    int direction; //direction of attack 
+    int animationFrames; // total frames of animation, IE number of images
+    int divider; // how many frames should each image be displayed
+    int currentFrame; // current frame of animation
+    String imagePrefix; // prefix of image file
+    String imageSuffix; // suffix of image file
+    private BufferedImage imageArray[]; //array of original images
+    private BufferedImage displayArray[]; // array of images to be displayed. IE rotated images
+    public Entity source; //source of attack. Used to determine if hit or not
+    boolean piercing; // will attack disappear after hitting one target? CURRENTLY UNIMPLEMENTED
+    int damage; // Damage of attack
+    int iFrames; //frames that the target will be invincible
+    int effectId; // id of effect. used to load images 
+    HashSet<Entity> hitTracker; // tracks which enemy has been hit. Same attack cannot hit enemy multiple times
+    int soundId; // id of sound. used to load and play sound of attack
+    int soundHitId; // id of sound. used to load and play sound of attack hit
 
     public Attack(int totalFrames, int baseDirection, int direction, int animationFrames, int divider, BufferedImage[] imageArray, Entity source, boolean piercing, int damage, int iFrames, int sprite_width, int sprite_height, int width, int height, int soundId, int soundHitId) {
         super(sprite_width, sprite_height, width, height, 0, 0, 0, -1, -1);

@@ -1,16 +1,23 @@
 package personal;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.AbstractQueue;
 import java.util.ArrayList;
+import java.util.Queue;
+import java.util.AbstractQueue;
+import java.awt.LayoutManager;
+import java.awt.event.ActionEvent;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import java.awt.GridBagLayout;
 import personal.Sounds.Sound;
 import personal.UI.HpBar;
 import personal.enemy.Amg;
+import personal.enemy.Enemy;
 import personal.player.Player;
 import personal.attacks.Attack;
-//import personal.enemy.Amg1;
-
 
 public class GameEngine implements KeyListener {
     public static boolean DEBUG = false;
@@ -19,98 +26,107 @@ public class GameEngine implements KeyListener {
     public static int frameHeight = 900;
     public static Thread mainThread;
     public static boolean run;
-    private Player player;
+    private static Player player;
     private int keyPressed;
-    private Background background;
+    private static Background background;
     public JFrame frame;
     private JPanel mainPanel;
-    private ArrayList<Entity> enemies;
-    public ArrayList<Entity> toRemove = new ArrayList<>();
+    private static ArrayList<Entity> enemies = new ArrayList<Entity>();
+    public static ArrayList<Entity> toRemove = new ArrayList<>();
     private boolean rightkeyPressed;
     private boolean leftkeyPressed;
     private boolean upkeyPressed;
     private boolean downkeyPressed;
     private boolean spacePressed;
     public ArrayList<loadedImage> toLoad= new ArrayList<>();
-    public Loader loader;
+    public static Loader loader;
     public static ArrayList<JPanel> uiComponents = new ArrayList<>();
+    public static ArrayList<JPanel> combatComponents = new ArrayList<>();
 
     public GameEngine() {
-
+        engine = this;
         frame = new JFrame();
-        loader = new Loader(toLoad);
-        
         spacePressed = false;
         rightkeyPressed = false;
         leftkeyPressed = false;
         upkeyPressed = false;
         downkeyPressed = false;
 
-        toLoad.add(new loadedImage("./effects/slash/slash (", ").png", 10, 1));
-        loader = new Loader(toLoad);
-        //loader.Load(toLoad);
-        int [] testSounds = {0, 1};
-        Sound.loadSounds(testSounds);
 
-        background = new Background();
-        enemies = new ArrayList<Entity>();
-        player = new Player();
-
-        Amg a = new Amg(player, 200, 200);
-        enemies.add(a);
-
-        mainPanel = new JPanel();
-
-
-        mainPanel.add(background);
-        //frame.add(background);
-        //background.add(player);
-        //background.add(enemies.get(0));
-
-        //Z LAYOUT START
-        
-        
-        frame.getLayeredPane();
-        frame.getLayeredPane().add(player);
-        frame.getLayeredPane().add(enemies.get(0));
-        
-        frame.getLayeredPane().add(background);
-
-        //TEST
-        //Slashattack slashAttack = new Slashattack(2, 4, (Entity) player, 10, player.position, 15, loader);
-
-        //TEST END
-        frame.getLayeredPane().setLayer(background, 0);
-        frame.getLayeredPane().setLayer(player, 900);
-        frame.getLayeredPane().setLayer(enemies.get(0), 500);
-
-        //COMBAT SEQUENCE INIT
-        combatSequenceInit(player);
-
-
-        for (int i = 0; i < uiComponents.size(); i++) {
-            frame.getLayeredPane().add(uiComponents.get(i));
-            frame.getLayeredPane().setLayer(uiComponents.get(i), 3000);
-        }
-
-        if (DEBUG) {
-            player.setOpaque(true);
-            for (int i = 0; i < enemies.size(); i++) {
-                enemies.get(i).setOpaque(true);
-            }
-        }
-        
-        //Z LAYOUT END
-        //frame.setLayout(null);
         frame.setSize(1024, 900);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.addKeyListener(this);
 
+
+
+
+        loader = new Loader();
+        player = new Player();
+        
+        initComponents();
+
+        titleSequenceInit();
+        frame.repaint();
+
+        //combatSequenceInit(null, null);
+        
     }
 
-    public void initCombat() {
+    public void loadSequenceInit() {
 
+    }
+    
+    public void titleSequenceInit() {
+        JPanel panel = new TitleScreen();
+        /*
+        frame.getLayeredPane().invalidate();
+        frame.getLayeredPane().removeAll();
+        frame.getLayeredPane().validate();
+        frame.getLayeredPane().repaint();
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
+        JButton startButton = new JButton("Start Game");
+        startButton.addActionListener((ActionListener) new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                combatSequenceInit(null, null);
+            }
+        });;
+        startButton.setVisible(true);
+        startButton.setFocusable(false);
+
+        
+        JButton loadButton = new JButton("Load Game");
+        loadButton.addActionListener((ActionListener) new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                loadSequenceInit();
+            }
+        });;
+        loadButton.setVisible(true);
+        loadButton.setFocusable(false);
+        
+        JButton exitButton = new JButton("Exit");
+        exitButton.addActionListener((ActionListener) new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+            }
+        });;
+        exitButton.setVisible(true);
+        exitButton.setFocusable(false);
+
+    
+        panel.setVisible(true);
+        panel.add(startButton);
+        panel.add(loadButton);
+        panel.add(exitButton);
+        panel.setBounds(0, 0, 1024,900);
+        */
+        frame.getLayeredPane().add(panel);
+    }
+
+    public void initComponents() {
+        combatComponents.add(new HpBar(player));
     }
 
     public void run(GameEngine game) {
@@ -146,8 +162,63 @@ public class GameEngine implements KeyListener {
         }
     }
 
-    public void combatSequenceInit(Player player) {
-        uiComponents.add(new HpBar(player));
+    public void combatSequenceInit(Background background, ArrayList<Enemy> eventEnemies) {
+        frame.getLayeredPane().invalidate();
+        frame.getLayeredPane().removeAll();
+        frame.getLayeredPane().validate();
+        frame.getLayeredPane().repaint();
+        uiComponents.clear();
+        loader.combatLoad();
+        Sound.loadSounds(Sound.combatSounds);
+
+        //TO CHANGE DYNAMICALLY
+        background = new Background();
+        Amg a = new Amg(player, 200, 200);
+        enemies.add(a);
+        //TO CHANGE END
+
+        frame.getLayeredPane().add(player);
+        for (int i = 0; i < enemies.size(); i++) {
+            frame.getLayeredPane().add(enemies.get(i));
+            frame.getLayeredPane().setLayer(enemies.get(i), enemies.get(i).position[1]);
+        }
+        frame.getLayeredPane().add(background);
+        frame.getLayeredPane().setLayer(background, 0);
+        frame.getLayeredPane().setLayer(player, player.position[1]);
+        
+        for (int i = 0; i < combatComponents.size(); i++) {
+            uiComponents.add(combatComponents.get(i));
+        }
+
+        for (int i = 0; i < uiComponents.size(); i++) {
+            frame.getLayeredPane().add(uiComponents.get(i));
+            frame.getLayeredPane().setLayer(uiComponents.get(i), 3000);
+        }
+
+        if (DEBUG) {
+            player.setOpaque(true);
+            for (int i = 0; i < enemies.size(); i++) {
+                enemies.get(i).setOpaque(true);
+            }
+        }
+        mainThread = new Thread(() -> {
+            
+            while (run) {
+                try {
+                    Thread.sleep(20);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                engine.update();
+            }
+        });
+        mainThread.start();
+
+    }
+
+    public void combatSequenceEnd() {
+        uiComponents.clear();
+
     }
 
     
@@ -229,18 +300,6 @@ public class GameEngine implements KeyListener {
     public static void start() {
         run = true;
         engine = new GameEngine();
-        mainThread = new Thread(() -> {
-            
-            while (run) {
-                try {
-                    Thread.sleep(20);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                engine.update();
-            }
-        });
-        mainThread.start();
     }
     
     public static void stop() {
