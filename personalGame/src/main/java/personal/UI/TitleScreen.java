@@ -1,4 +1,4 @@
-package personal;
+package personal.UI;
 
 import javax.swing.JPanel;
 import personal.GameEngine;
@@ -42,7 +42,7 @@ public class TitleScreen extends JPanel {
         c.weighty = 0.5;
         JPanel backGround = new JPanel();
         try {
-            img = ImageIO.read(getClass().getResource("title.jpg"));
+            img = ImageIO.read(getClass().getResource("../title.jpg"));
         } catch (IOException e1) {
             // TODO Auto-generated catch block
             e1.printStackTrace();

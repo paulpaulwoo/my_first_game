@@ -32,6 +32,7 @@
      <resource>
        <directory>src/main/java/personal/effects</directory>
        <directory>src/main/java/personal/enemy/last-guardian-sprites</directory>
+       <directory>src/main/java/personal/saves</directory>
      </resource>
    </resources>
   <dependencies>

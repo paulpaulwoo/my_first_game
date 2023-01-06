@@ -14,6 +14,8 @@ import javax.swing.JPanel;
 import java.awt.GridBagLayout;
 import personal.Sounds.Sound;
 import personal.UI.HpBar;
+import personal.UI.LoadScreen;
+import personal.UI.TitleScreen;
 import personal.enemy.Amg;
 import personal.enemy.Enemy;
 import personal.player.Player;
@@ -42,6 +44,8 @@ public class GameEngine implements KeyListener {
     public static Loader loader;
     public static ArrayList<JPanel> uiComponents = new ArrayList<>();
     public static ArrayList<JPanel> combatComponents = new ArrayList<>();
+    public static String saveString;
+    
 
     public GameEngine() {
         engine = this;
@@ -74,54 +78,12 @@ public class GameEngine implements KeyListener {
     }
 
     public void loadSequenceInit() {
-
+        JPanel panel = new LoadScreen();
+        frame.getLayeredPane().add(panel);
     }
     
     public void titleSequenceInit() {
         JPanel panel = new TitleScreen();
-        /*
-        frame.getLayeredPane().invalidate();
-        frame.getLayeredPane().removeAll();
-        frame.getLayeredPane().validate();
-        frame.getLayeredPane().repaint();
-
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridBagLayout());
-        JButton startButton = new JButton("Start Game");
-        startButton.addActionListener((ActionListener) new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                combatSequenceInit(null, null);
-            }
-        });;
-        startButton.setVisible(true);
-        startButton.setFocusable(false);
-
-        
-        JButton loadButton = new JButton("Load Game");
-        loadButton.addActionListener((ActionListener) new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                loadSequenceInit();
-            }
-        });;
-        loadButton.setVisible(true);
-        loadButton.setFocusable(false);
-        
-        JButton exitButton = new JButton("Exit");
-        exitButton.addActionListener((ActionListener) new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                frame.dispose();
-            }
-        });;
-        exitButton.setVisible(true);
-        exitButton.setFocusable(false);
-
-    
-        panel.setVisible(true);
-        panel.add(startButton);
-        panel.add(loadButton);
-        panel.add(exitButton);
-        panel.setBounds(0, 0, 1024,900);
-        */
         frame.getLayeredPane().add(panel);
     }
 
