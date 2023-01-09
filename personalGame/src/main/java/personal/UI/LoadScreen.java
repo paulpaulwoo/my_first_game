@@ -29,6 +29,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Reader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.awt.Graphics2D;
@@ -37,6 +39,7 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 
 import java.io.Serializable;
 
@@ -44,20 +47,31 @@ public class LoadScreen extends JPanel {
     BufferedImage img;
     BufferedImage emptyImage;
     Graphics2D grph;
-    ArrayList<PlayerData> saves;
+    PlayerData[] saves;
     int currentData = 0;
     GsonBuilder builder = new GsonBuilder();
     Gson gson = builder.create(); 
     public LoadScreen() {
-        //JFrame frame = GameEngine.frameClear();
-        saves = new ArrayList<>();
-        URL url = getClass().getResource("../saves/save");
+        JFrame frame = GameEngine.frameClear();
+        saves = new PlayerData[4];
         
-        System.out.println(url);
+        //URL url = this.getClass().getClassLoader().getResource("personal/saves/save");
+        File fileCheck = new File(this.getClass().getClassLoader().getResource("").getPath()+ "personal/saves/save");
+        URL url;
+        try {
+            url = fileCheck.toURI().toURL();
+        } catch (MalformedURLException e2) {
+            // TODO Auto-generated catch block
+            url = null;
+            System.out.println("failed");
+        }
+        
+   
         if (url == null) {
+ 
             for (int i = 0; i < 4; i++) {
                 PlayerData data = new PlayerData();
-                saves.add(data);
+                saves[i] = data;
             }
 
             try {
@@ -66,11 +80,14 @@ public class LoadScreen extends JPanel {
                 System.out.println(routePath.substring(1));
                 File file = new File(routePath.substring(1));
                 file.createNewFile();
-   
+
                 //objectOut = new ObjectOutputStream(fileOut);
                 //objectOut.writeObject(saves);
                 FileWriter writer = new FileWriter(file);
                 gson.toJson(saves, writer);
+                //for (int i = 0; i < 4; i++) {
+                //    gson.toJson(saves.get(i), writer);
+                //}
                 writer.flush();
                 writer.close();
                 //objectOut.close();
@@ -90,10 +107,15 @@ public class LoadScreen extends JPanel {
         FileInputStream fileIn;
         ObjectInputStream objectIn;
         try {
-            //saves = (ArrayList<PlayerData>) objectIn.readObject();
+            Reader reader = new FileReader(this.getClass().getClassLoader().getResource("").getPath()+ "personal/saves/save");
+            PlayerData[] data = gson.fromJson(reader, PlayerData[].class);
             
-            saves = gson.fromJson(new FileReader(this.getClass().getClassLoader().getResource("").getPath()+ "personal/saves/save"), saves.getClass());
-            
+            for (int i = 0; i < 4; i++) {
+                
+                saves[i] = data[i];
+
+            }
+
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             
@@ -110,7 +132,7 @@ public class LoadScreen extends JPanel {
         c.gridheight = 4;
         c.weightx = 1.0;
         c.weighty = 0.5;
-        //frame.add(makePanel(saves.get(currentData)));
+        frame.add(makePanel(saves[currentData]));
         //for the top 2 / 3 of the screen, we need a panel to show what
         //this save file is all about
 
@@ -172,14 +194,17 @@ public class LoadScreen extends JPanel {
         return panel;
     }
 
+
     public static void main(String[] args) {
         LoadScreen load =new LoadScreen();
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create(); 
 
-        for (int i = 0; i < load.saves.size(); i++) {
 
-            System.out.println(gson.toJson(load.saves.get(i)));
+        for (int i = 0; i < load.saves.length; i++) {
+
+            System.out.println(gson.toJson(load.saves[i]));
         }
     }
+    
 }
