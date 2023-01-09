@@ -208,6 +208,16 @@ public class GameEngine implements KeyListener {
         keyPressed = 0;
     }
 
+
+    public static JFrame frameClear() {
+        JFrame frame = GameEngine.engine.frame;
+        frame.getLayeredPane().invalidate();
+        frame.getLayeredPane().removeAll();
+        frame.getLayeredPane().validate();
+        frame.getLayeredPane().repaint();
+        return frame;
+    }
+
     public void update() {
         keyUpdate();
         player.handleKey(keyPressed);

@@ -40,6 +40,8 @@ public class PlayerData implements Serializable{
 
     public boolean[] achievements;
 
+    public boolean ingame;
+
     public PlayerData() {
         isNew = true;
         items = new ArrayList<>();
