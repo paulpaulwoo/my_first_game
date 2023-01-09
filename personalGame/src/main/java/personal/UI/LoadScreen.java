@@ -126,13 +126,13 @@ public class LoadScreen extends JPanel {
         }
 
 
-        //this.setLayout(new GridBagLayout());
+        this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.gridwidth = 1;
         c.gridheight = 4;
         c.weightx = 1.0;
         c.weighty = 0.5;
-        frame.add(makePanel(saves[currentData]));
+        this.add(makePanel(saves[currentData]), c);
         //for the top 2 / 3 of the screen, we need a panel to show what
         //this save file is all about
 
@@ -182,13 +182,15 @@ public class LoadScreen extends JPanel {
         JPanel panel = new JPanel();
         
         if (data.isNew) {
+            //System.out.print("haha");
             JLabel label = new JLabel("New File");
             label.setFont(new Font("Verdana",1,30));
             
             panel.add(label);
+            label.setVisible(true);
             panel.setBorder(new LineBorder(Color.BLUE, 20));
             panel.setSize(GameEngine.frameWidth, GameEngine.frameHeight * 2 / 3);
-
+            panel.setVisible(true);
         }
 
         return panel;
