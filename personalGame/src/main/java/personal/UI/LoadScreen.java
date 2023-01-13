@@ -1,6 +1,8 @@
 package personal.UI;
 
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+
 import personal.GameEngine;
 import personal.player.PlayerData;
 
@@ -128,11 +130,29 @@ public class LoadScreen extends JPanel {
 
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
-        c.gridwidth = 1;
+        c.gridwidth = 6;
         c.gridheight = 4;
-        c.weightx = 1.0;
-        c.weighty = 0.5;
+        c.gridx = 0;
+        c.gridy = 0;        
+        c.weightx = 0.6;
+        c.weighty = 0.6;
+        c.fill = GridBagConstraints.BOTH;
         this.add(makePanel(saves[currentData]), c);
+
+        GridBagConstraints c2 = new GridBagConstraints();
+        c2.gridwidth = 1;
+        c2.gridheight = 1;
+        c2.gridx = 0;
+        c2.gridy = 4;        
+        c2.weightx = 0.2;
+        c2.weighty = 0.2;
+        c2.fill = GridBagConstraints.BOTH;
+        for (int i = 0; i < saves.length; i++) {
+            c2.gridx = i;
+            this.add(makeButton(saves[i], i), c2);
+        }
+        c2.gridx = saves.length + 1;
+        this.add(makeReturnButton(), c2);
         //for the top 2 / 3 of the screen, we need a panel to show what
         //this save file is all about
 
@@ -180,23 +200,54 @@ public class LoadScreen extends JPanel {
     
     public static JPanel makePanel(PlayerData data) {
         JPanel panel = new JPanel();
-        
+        panel.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridwidth = 1;
+        c.gridheight = 1;
+        c.gridx = 1;
+        c.gridy = 0;        
+        c.weightx = 0.6;
+        c.weighty = 0.6;
+        c.fill = GridBagConstraints.HORIZONTAL;
         if (data.isNew) {
             //System.out.print("haha");
-            JLabel label = new JLabel("New File");
+ 
+            JLabel label = new JLabel("New File", SwingConstants.CENTER);
             label.setFont(new Font("Verdana",1,30));
-            
-            panel.add(label);
+            label.setBorder(new LineBorder(Color.BLUE, 10));
+            //c.anchor = GridBagConstraints.CENTER;
+            panel.add(label, c);
             label.setVisible(true);
-            panel.setBorder(new LineBorder(Color.BLUE, 20));
-            panel.setSize(GameEngine.frameWidth, GameEngine.frameHeight * 2 / 3);
+            panel.setBorder(new LineBorder(Color.BLUE, 10));
+            //panel.setSize(GameEngine.frameWidth, GameEngine.frameHeight * 2 / 3);
             panel.setVisible(true);
         }
 
         return panel;
     }
 
+    public static JButton makeButton(PlayerData data, int index) {
+        JButton button = new JButton("Save " + (index + 1));
+        button.setVisible(true);
+        button.setFocusable(false);
+        button.setBorder(new LineBorder(Color.BLACK, 10));
+        return button;
+    }
 
+    
+    public static JButton makeReturnButton() {
+        JButton button = new JButton("To Title Screen");
+        button.setVisible(true);
+        button.setFocusable(false);
+        button.setBorder(new LineBorder(Color.BLACK, 10));
+        button.addActionListener((ActionListener) new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                GameEngine.engine.titleSequenceInit();
+            }
+        });;
+        return button;
+    }
+/* 
     public static void main(String[] args) {
         LoadScreen load =new LoadScreen();
         GsonBuilder builder = new GsonBuilder();
@@ -208,5 +259,5 @@ public class LoadScreen extends JPanel {
             System.out.println(gson.toJson(load.saves[i]));
         }
     }
-    
+*/    
 }

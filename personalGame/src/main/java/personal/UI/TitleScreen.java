@@ -25,11 +25,12 @@ public class TitleScreen extends JPanel {
     BufferedImage emptyImage;
     Graphics2D grph;
     public TitleScreen() {
-        JFrame frame = GameEngine.engine.frame;
-        frame.getLayeredPane().invalidate();
-        frame.getLayeredPane().removeAll();
-        frame.getLayeredPane().validate();
-        frame.getLayeredPane().repaint();
+        //JFrame frame = GameEngine.engine.frame;
+        JFrame frame = GameEngine.frameClear();
+        //frame.getLayeredPane().invalidate();
+       //frame.getLayeredPane().removeAll();
+        //frame.getLayeredPane().validate();
+        //frame.getLayeredPane().repaint();
 
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();

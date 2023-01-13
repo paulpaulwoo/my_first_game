@@ -7,12 +7,13 @@ import java.awt.Graphics;
 import java.awt.*;
 
 public class Background extends JPanel {
-    private BufferedImage img;
+    private Image img;
     public Background() {
         this.setLayout(new GridBagLayout());
         this.setBounds(0, 0,1200, 1000);
         try {
-            img = ImageIO.read(getClass().getResource("board2.png"));
+            img = ImageIO.read(getClass().getResource("board2.png")).getScaledInstance(GameEngine.engine.frame.getWidth(), GameEngine.engine.frame.getHeight() - 30, Image.SCALE_DEFAULT);
+
         } catch (IOException e) {
             e.printStackTrace();
         }

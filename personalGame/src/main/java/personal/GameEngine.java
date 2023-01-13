@@ -57,7 +57,8 @@ public class GameEngine implements KeyListener {
         downkeyPressed = false;
 
 
-        frame.setSize(1024, 900);
+        //frame.setSize(1024, 900);
+        frame.setSize(1035, 935);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.addKeyListener(this);
