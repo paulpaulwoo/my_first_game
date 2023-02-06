@@ -41,6 +41,8 @@ public class PlayerData implements Serializable{
     public boolean[] achievements;
 
     public boolean ingame;
+    
+    public int nextEventId;
 
     public PlayerData() {
         isNew = true;

@@ -23,7 +23,7 @@ public class Player extends Entity{
     private int currentFrame = 0;
     private int state;
     private int divider = 1;
-    public int attackFrames = 10;
+    public int attackFrames = 15;
     private float transparancy = 1f;
     int delay = 0;
     private boolean changeReady = false;

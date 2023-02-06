@@ -1,24 +1,20 @@
 package personal;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.AbstractQueue;
 import java.util.ArrayList;
-import java.util.Queue;
-import java.util.AbstractQueue;
-import java.awt.LayoutManager;
-import java.awt.event.ActionEvent;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import java.awt.GridBagLayout;
 import personal.Sounds.Sound;
 import personal.UI.HpBar;
 import personal.UI.LoadScreen;
+import personal.UI.MainScreen;
+import personal.UI.NewgameScreen;
 import personal.UI.TitleScreen;
 import personal.enemy.Amg;
 import personal.enemy.Enemy;
+import personal.events.Event;
 import personal.player.Player;
+import personal.player.PlayerData;
 import personal.attacks.Attack;
 
 public class GameEngine implements KeyListener {
@@ -30,9 +26,7 @@ public class GameEngine implements KeyListener {
     public static boolean run;
     private static Player player;
     private int keyPressed;
-    private static Background background;
     public JFrame frame;
-    private JPanel mainPanel;
     private static ArrayList<Entity> enemies = new ArrayList<Entity>();
     public static ArrayList<Entity> toRemove = new ArrayList<>();
     private boolean rightkeyPressed;
@@ -45,6 +39,9 @@ public class GameEngine implements KeyListener {
     public static ArrayList<JPanel> uiComponents = new ArrayList<>();
     public static ArrayList<JPanel> combatComponents = new ArrayList<>();
     public static String saveString;
+    public static PlayerData currentData;
+    public static int saveIndex; 
+    
     
 
     public GameEngine() {
@@ -56,7 +53,6 @@ public class GameEngine implements KeyListener {
         upkeyPressed = false;
         downkeyPressed = false;
 
-
         //frame.setSize(1024, 900);
         frame.setSize(1035, 935);
         frame.setVisible(true);
@@ -65,10 +61,11 @@ public class GameEngine implements KeyListener {
 
 
 
-
+        Event.Init();
         loader = new Loader();
         player = new Player();
-        
+        frame.setLocationRelativeTo(null);
+
         initComponents();
 
         titleSequenceInit();
@@ -88,15 +85,25 @@ public class GameEngine implements KeyListener {
         frame.getLayeredPane().add(panel);
     }
 
+    public void mainSequenceInit(PlayerData data) {
+        JPanel panel = new MainScreen(data);
+        frame.getLayeredPane().add(panel);
+    }
+
+    public void newGameSequenceInit() {
+        JPanel panel = new NewgameScreen();
+        frame.getLayeredPane().add(panel);
+    }
+
     public void initComponents() {
         combatComponents.add(new HpBar(player));
     }
-
+    /*
     public void run(GameEngine game) {
         Thread thread = new Thread(() -> {
             while (true) {
                 try {
-                    Thread.sleep(33);
+                    Thread.sleep(20);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -105,7 +112,7 @@ public class GameEngine implements KeyListener {
         });
         thread.start();
     }
-    
+    */
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {
@@ -168,7 +175,7 @@ public class GameEngine implements KeyListener {
             
             while (run) {
                 try {
-                    Thread.sleep(20);
+                    Thread.sleep(33);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

@@ -5,10 +5,8 @@ import personal.GameEngine;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.imageio.ImageIO;
 import javax.swing.Box;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -17,7 +15,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import javax.swing.border.Border;
 
 
 public class TitleScreen extends JPanel {
@@ -41,7 +38,6 @@ public class TitleScreen extends JPanel {
         c.gridheight = 4;
         c.weightx = 1.0;
         c.weighty = 0.5;
-        JPanel backGround = new JPanel();
         try {
             img = ImageIO.read(getClass().getResource("../title.jpg"));
         } catch (IOException e1) {
@@ -57,7 +53,7 @@ public class TitleScreen extends JPanel {
         JButton startButton = new JButton("New Game");
         startButton.addActionListener((ActionListener) new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                GameEngine.engine.combatSequenceInit(null, null);
+                GameEngine.engine.newGameSequenceInit();;
             }
         });;
         

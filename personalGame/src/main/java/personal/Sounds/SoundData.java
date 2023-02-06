@@ -1,5 +1,7 @@
 package personal.Sounds;
 
+import java.util.Queue;
+
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -15,6 +17,8 @@ public class SoundData {
         this.data = data;
         this.format = format;
     }
+
+
 
     public void play() {
         try {

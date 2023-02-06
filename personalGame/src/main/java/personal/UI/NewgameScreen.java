@@ -34,17 +34,17 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 
-public class LoadScreen extends JPanel {
-    public static LoadScreen screen;
+public class NewgameScreen extends JPanel {
+    public static NewgameScreen screen;
     BufferedImage img;
     BufferedImage emptyImage;
     Graphics2D grph;
-    PlayerData[] saves;
+    public static PlayerData[] saves;
     public static int currentData = 0;
     GsonBuilder builder = new GsonBuilder();
     Gson gson = builder.create(); 
     JPanel currentPanel;
-    public LoadScreen() {
+    public NewgameScreen() {
         screen = this;
         JFrame frame = GameEngine.frameClear();
         saves = new PlayerData[4];
@@ -191,7 +191,7 @@ public class LoadScreen extends JPanel {
         public void mousePressed(MouseEvent e)
         {
             //JPanel panel = (JPanel)e.getSource();
-            askLoadGame(data.isNew);
+            askNewGame();
             // do your processing on the panel
         }
         @Override
@@ -250,7 +250,9 @@ public class LoadScreen extends JPanel {
     if (x == JOptionPane.YES_OPTION) {
         // start game
         //TODO: Implement start
-
+        GameEngine.engine.mainSequenceInit(
+            saves[currentData]
+            );
     }
         return false;
     }
