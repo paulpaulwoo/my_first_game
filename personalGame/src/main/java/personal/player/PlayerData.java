@@ -47,7 +47,7 @@ public class PlayerData implements Serializable{
     public PlayerData() {
         isNew = true;
         items = new ArrayList<>();
-
+        nextEventId = 1;
     }
     
 }

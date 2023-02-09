@@ -21,6 +21,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 import java.awt.Font;
+import personal.UI.ChoiceButton;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -41,27 +42,36 @@ public class MainScreen extends JPanel {
     Event currentEvent;
     public static PlayerData pData;
     public MainScreen(PlayerData data) {
-        JFrame frame = GameEngine.frameClear();
-        currentEvent = Event.getEvent(pData.nextEventId);
         pData = data;
+        JFrame frame = GameEngine.frameClear();
+        this.setBounds(0, 0, 1024,900);
+        currentEvent = Event.getEvent(pData.nextEventId);
+    
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.gridwidth = 3;
         c.gridheight = 1;
         c.gridx = 0;
-        c.gridy = 2;        
-        c.weightx = 0.2;
-        c.weighty = 0.2;
+        c.gridy = 3;
+        c.weightx = 1;
+        c.weighty = 0.5;
+        c.fill = GridBagConstraints.BOTH;
         textPanel = makeTextPanel(currentEvent.baseString);
-        frame.add(textPanel);
-        
+        this.add(textPanel, c);
+        c.gridwidth = 3;
         c.gridheight = 3;
+        c.weightx = 1;
+        c.weighty = 1;
         c.gridx = 0;
         c.gridy = 0;        
-        c.weightx = 0.8;
-        c.weighty = 0.8;
+        //c.weightx = ;
+        //c.weighty = 0.1;
         eventPanel = makeEventPanel(currentEvent);
-
+        this.add(eventPanel, c);
+        
+        this.revalidate();
+        this.repaint();
+        this.setVisible(true);
     }
 
 
@@ -90,7 +100,7 @@ public class MainScreen extends JPanel {
         eventTextPanel.setLayout(new GridBagLayout());
         eventTextPanel.add(Box.createVerticalStrut(50));
         eventTextPanel.add(Box.createHorizontalStrut(50));
-        eventTextLabel = new JLabel(event.baseString);
+        eventTextLabel = new JLabel(event.baseChoiceString);
         eventTextPanel.add(eventTextLabel);
         c.ipadx = 50;
         c.ipady = 25;
@@ -119,14 +129,17 @@ public class MainScreen extends JPanel {
         c2.gridx = 0;
         
         for (int i = 0; i < event.numOfChoices; i++) {
-            JButton choiceButton = new JButton(event.choiceStrings[i]);
+            //JButton choiceButton = new JButton(event.choiceStrings[i]);
+            ChoiceButton choiceButton = new ChoiceButton(this, currentEvent, i);
+            /*
+            /* 
             final int finI = i;
             choiceButton.addActionListener((ActionListener) new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    event.choiceAction(finI, pData);
+                    event.choiceAction(finI);
                 }
             });;
-            /* 
+            
             MouseListener ml = new MouseAdapter() {
                 @Override
                 public void mouseEntered(MouseEvent e) {
@@ -140,19 +153,31 @@ public class MainScreen extends JPanel {
                 }
             };
             */
-            choiceButton.setVisible(true);
-            choiceButton.setFocusable(false);
+            
+            
+
             c2.gridy = i;
             eventChoicePanel.add(choiceButton, c2);
         }
+        eventPanel.add(eventChoicePanel, c);
         this.setVisible(true);
         this.setBounds(0, 0, 1024,900);
 
 
         return eventPanel;
     }
-    
 
+    public void choiceMade(int choiceId) {
+        currentEvent.choiceAction(choiceId);
+    }
+
+    public void updateTextBox(String text) {
+        textLabel.setText(text);
+    }
+
+
+    
+/* 
     public static void main(String[] args) {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create(); 
@@ -181,5 +206,6 @@ public class MainScreen extends JPanel {
         });
         t.start();
     }
+    */
 }
  
