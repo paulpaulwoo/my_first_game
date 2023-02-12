@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import personal.Sounds.Sound;
+import personal.Sounds.SoundData;
 import personal.UI.HpBar;
 import personal.UI.LoadScreen;
 import personal.UI.MainScreen;
@@ -62,13 +63,18 @@ public class GameEngine implements KeyListener {
 
 
         Event.Init();
+
         loader = new Loader();
         player = new Player();
         frame.setLocationRelativeTo(null);
 
         initComponents();
 
+        SoundData.soundThread.start();
+
         titleSequenceInit();
+
+
         frame.repaint();
 
         //combatSequenceInit(null, null);

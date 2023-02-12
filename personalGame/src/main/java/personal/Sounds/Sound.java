@@ -40,7 +40,10 @@ public class Sound {
     }
     
     public static void playSound(int soundId) {
-      soundData.get(Integer.valueOf(soundId)).play();
+      //TODO
+      //soundData.get(Integer.valueOf(soundId)).play();
+      
+      SoundData.addQueue(soundData.get(Integer.valueOf(soundId)));
     } 
 
     public static void loadSounds(int [] soundidints) {

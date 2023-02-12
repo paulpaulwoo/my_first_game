@@ -8,6 +8,7 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.imageio.ImageIO;
 
@@ -16,6 +17,8 @@ public class Loader { //class to load in images and store it in Ram rather than 
                       //every single time
         
     public Map<Integer, BufferedImage []> images = new HashMap<>();
+    private ReentrantLock mutex = new ReentrantLock(true);
+    
     public Loader() {
 
     }
@@ -24,9 +27,7 @@ public class Loader { //class to load in images and store it in Ram rather than 
         for (int i = 0; i < toLoad.size(); i++) {
             BufferedImage[] animation = new BufferedImage[toLoad.get(i).animationLength];
             for (int j = 0; j < animation.length; j++) {
-                try {
-                    
-                    
+                try {                    
                     animation[j] = ImageIO.read(getClass().getResource(toLoad.get(i).prefix + (j + 1) + toLoad.get(i).suffix));
                 } catch (IOException e) {
                     // TODO Auto-generated catch block
@@ -98,7 +99,9 @@ public class Loader { //class to load in images and store it in Ram rather than 
     }
 
     public void combatLoad() {
+        mutex.lock();
         loadIndividual(new loadedImage("./effects/slash/slash (", ").png", 10, 1));
+        mutex.unlock();
     }
 
     public void combatUnload() {
