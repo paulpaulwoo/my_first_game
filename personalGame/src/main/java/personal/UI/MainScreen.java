@@ -1,35 +1,17 @@
 package personal.UI;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import personal.GameEngine;
 import personal.player.PlayerData;
 import personal.events.Event;
-import javax.swing.Box;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.awt.Color;
 import java.awt.Font;
-import personal.UI.ChoiceButton;
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.Reader;
-import java.awt.Graphics2D;
-import java.awt.Image;
 
 public class MainScreen extends JPanel {
 
@@ -39,20 +21,49 @@ public class MainScreen extends JPanel {
     public JPanel eventTextPanel;
     public JLabel eventTextLabel;
     public JPanel eventChoicePanel;
+    public JPanel statpanel;
+    public JPanel hpPanel;
+    public JLabel str;
+    public JLabel intel;
+    public JLabel con;
+    public JLabel wis;
+    public JLabel cha;
+
+
     Event currentEvent;
     public static PlayerData pData;
+    private static final String htmlEnding = "</h1><html>";
+    private static final String htmlHeading = "<html><h1>";
+    
     public MainScreen(PlayerData data) {
         pData = data;
-        JFrame frame = GameEngine.frameClear();
+        GameEngine.frameClear();
         this.setBounds(0, 0, 1024,900);
         currentEvent = Event.getEvent(pData.nextEventId);
     
         this.setLayout(new GridBagLayout());
+
+
+
         GridBagConstraints c = new GridBagConstraints();
+
+
+        statpanel = makeStatPanel(data);
+        c.fill = GridBagConstraints.BOTH;
+
         c.gridwidth = 3;
         c.gridheight = 1;
         c.gridx = 0;
-        c.gridy = 3;
+        c.gridy = 0;
+        c.weightx = 1;
+        c.weighty = 0.1;
+        this.add(statpanel, c);
+
+
+        c.gridwidth = 3;
+        c.gridheight = 1;
+        c.gridx = 0;
+        c.gridy = 4;
         c.weightx = 1;
         c.weighty = 0.5;
         c.fill = GridBagConstraints.BOTH;
@@ -63,7 +74,7 @@ public class MainScreen extends JPanel {
         c.weightx = 1;
         c.weighty = 1;
         c.gridx = 0;
-        c.gridy = 0;        
+        c.gridy = 1;        
         //c.weightx = ;
         //c.weighty = 0.1;
         eventPanel = makeEventPanel(currentEvent);
@@ -72,6 +83,73 @@ public class MainScreen extends JPanel {
         this.revalidate();
         this.repaint();
         this.setVisible(true);
+    }
+
+
+
+
+    public JPanel makeStatPanel(PlayerData pdata) {
+        statpanel = new JPanel();
+        statpanel.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+
+        c.fill = GridBagConstraints.BOTH;
+        c.gridwidth = 1;
+        c.gridheight = 1;
+        c.weighty = 1;
+        c.gridx = 0;
+        c.weightx = 0.05;
+        JLabel hpLabel = new JLabel("<html><style>h1 {text-align: center;}</style><h1>HP: </h1></html>");
+        hpLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        hpLabel.setVerticalAlignment(SwingConstants.CENTER);
+
+        statpanel.add(hpLabel, c);
+        
+
+        c.fill = GridBagConstraints.BOTH;
+        c.gridwidth = 1;
+        c.gridheight = 1;
+        c.weightx = 0.48;
+        c.weighty = 1;
+        c.gridx = 1;
+        c.gridy = 0;
+        statpanel.add(new MainHpBar(pdata), c);
+        
+        c.gridx = 2;
+        c.weightx = 0.1;
+        str = new JLabel(String.join("", htmlHeading, "Str: ", Integer.toString(pdata.str), htmlEnding));
+        str.setBorder(new LineBorder(Color.BLUE, 2));
+        str.setHorizontalAlignment(SwingConstants.CENTER);
+        
+        intel = new JLabel(String.join("", htmlHeading, "Int: ", Integer.toString(pdata.intel), htmlEnding));
+        intel.setBorder(new LineBorder(Color.BLUE, 2));
+        intel.setHorizontalAlignment(SwingConstants.CENTER);
+        
+        con = new JLabel(String.join("", htmlHeading, "Con: ", Integer.toString(pdata.con), htmlEnding));
+        con.setBorder(new LineBorder(Color.BLUE, 2));
+        con.setHorizontalAlignment(SwingConstants.CENTER);
+        
+        wis = new JLabel(String.join("", htmlHeading, "Wis: ", Integer.toString(pdata.wis), htmlEnding));
+        wis.setBorder(new LineBorder(Color.BLUE, 2));
+        wis.setHorizontalAlignment(SwingConstants.CENTER);
+        
+        cha = new JLabel(String.join("", htmlHeading, "Cha: ", Integer.toString(pdata.cha), htmlEnding));
+        cha.setBorder(new LineBorder(Color.BLUE, 2));
+        cha.setHorizontalAlignment(SwingConstants.CENTER);
+        statpanel.add(str,c);
+        c.gridx++;
+        statpanel.add(intel,c);
+        c.gridx++;
+        statpanel.add(con,c);
+        c.gridx++;
+        statpanel.add(wis,c);
+        c.gridx++;
+        statpanel.add(cha,c);
+        c.gridx++;
+
+        statpanel.setVisible(true);
+        statpanel.setFocusable(false);
+        return statpanel;
     }
 
 
@@ -99,6 +177,8 @@ public class MainScreen extends JPanel {
         eventTextPanel = new JPanel();        
         eventTextPanel.setLayout(new GridBagLayout());
         eventTextLabel = new JLabel(event.baseChoiceString);
+        eventTextLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        eventTextLabel.setVerticalAlignment(SwingConstants.NORTH);
         GridBagConstraints c3 = new GridBagConstraints();
         c3.fill = GridBagConstraints.BOTH;
         c3.anchor = GridBagConstraints.FIRST_LINE_START;

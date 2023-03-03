@@ -2,29 +2,33 @@ package personal.events;
 
 import personal.player.PlayerData;
 import personal.GameEngine;
-
+import personal.UI.MainScreen;
 // GameEngine.currentData
 
 public class FirstEvent extends Event {
     static String[] choiceStrings = new String[] {"First Option", "Second Option"};
     //static final String baseString = "<html><head><style>body {background-color: linen;}h1 {color: maroon;margin-left: 40px;}</style></head><body><h1>This is a heading</h1><p>This is a paragraph.</p></body></html>"; 
+
     static final String baseString = String.join("",
     "<html>",
     "<head>",
     "<style>",
     "h1 {",
        "color: black;",
+       "font-family:'Courier New';",
+       "font-size: 500%;",
+       "padding-bottom:500%;",
     "}",
      "</style>",
      "</head>",
      "<body>",
      
-     "<h1>This is a heading</h1>",
-     "<h2>This is a paragraph. I was walking down a road... blah blah blah...",
-     "<br> And also blah blah blahh....... I am writing anything...... chatgpt",
-     "<br> Help me...... Why am I typing this all<br> on my own..... now I will use copy paste",
-     "<br> Help me...... Why am I typing this all<br> on my own..... now I will use copy paste",
-     "<br> Help me...... Why am I typing this all<br> on my own..... now I will use copy paste",
+     "<h1><br>The beginning<br><br></h1>",
+     "<h2>You wake up in a white room you never seen before.",
+     "<br>There is nothing in sight. You realize that you don't",
+     "<br>remember anything at all. Your mind is a blur, and you",
+     "<br>slowly try to regain some memory about yourself.",
+     "<br>Before this came to this room, you were.....",
      //"<br> Help me...... Why am I typing this all<br> on my own..... now I will use copy paste",
      //"<br> Help me...... Why am I typing this all<br> on my own..... now I will use copy paste",
      

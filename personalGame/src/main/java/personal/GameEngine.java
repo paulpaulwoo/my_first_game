@@ -252,6 +252,7 @@ public class GameEngine implements KeyListener {
             Entity.entities.remove(toRemove.get(i));
             frame.getLayeredPane().remove(toRemove.get(i));
         }
+        frame.getLayeredPane().revalidate();
     }
 
 

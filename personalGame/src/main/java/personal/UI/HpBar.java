@@ -23,6 +23,7 @@ public class HpBar extends JPanel {
         setSize(width, height);
         setBounds(width / 2, height, width, height);
         this.setOpaque(false);
+        
     }
 
     @Override

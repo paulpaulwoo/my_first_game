@@ -48,6 +48,9 @@ public class PlayerData implements Serializable{
         isNew = true;
         items = new ArrayList<>();
         nextEventId = 1;
+        maxHP = 1;
+        HP = 1;
+
     }
     
 }
