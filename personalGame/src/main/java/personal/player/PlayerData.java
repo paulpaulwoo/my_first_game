@@ -50,6 +50,11 @@ public class PlayerData implements Serializable{
         nextEventId = 1;
         maxHP = 1;
         HP = 1;
+        str = 7;
+        intel = 7;
+        con = 7;
+        wis = 7;
+        cha = 7;
 
     }
     

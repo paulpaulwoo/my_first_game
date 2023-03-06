@@ -38,7 +38,7 @@ public class ChoiceButton extends JPanel {
         setBackground(defaultBackgroundColor);
         setForeground(Color.BLACK);
         //setText(event.choiceStrings[choiceId]);
-        this.add(new JLabel(event.choiceStrings[choiceId]));
+        this.add(new JLabel("<html><body>" + event.choiceStrings[choiceId] + "</body></html>" ));
         this.addMouseListener( new MouseListener() {
             @Override
     public void mouseClicked(MouseEvent e) {

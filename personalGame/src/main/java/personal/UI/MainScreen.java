@@ -1,4 +1,6 @@
 package personal.UI;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -11,7 +13,7 @@ import personal.GameEngine;
 import personal.player.PlayerData;
 import personal.events.Event;
 import java.awt.Color;
-import java.awt.Font;
+import java.awt.Dimension;
 
 public class MainScreen extends JPanel {
 
@@ -34,57 +36,65 @@ public class MainScreen extends JPanel {
     public static PlayerData pData;
     private static final String htmlEnding = "</h1><html>";
     private static final String htmlHeading = "<html><h1>";
-    
+    public static MainScreen screen;
     public MainScreen(PlayerData data) {
         pData = data;
         GameEngine.frameClear();
         this.setBounds(0, 0, 1024,900);
         currentEvent = Event.getEvent(pData.nextEventId);
-    
-        this.setLayout(new GridBagLayout());
-
-
-
-        GridBagConstraints c = new GridBagConstraints();
 
 
         statpanel = makeStatPanel(data);
-        c.fill = GridBagConstraints.BOTH;
 
-        c.gridwidth = 3;
-        c.gridheight = 1;
-        c.gridx = 0;
-        c.gridy = 0;
-        c.weightx = 1;
-        c.weighty = 0.1;
-        this.add(statpanel, c);
-
-
-        c.gridwidth = 3;
-        c.gridheight = 1;
-        c.gridx = 0;
-        c.gridy = 4;
-        c.weightx = 1;
-        c.weighty = 0.5;
-        c.fill = GridBagConstraints.BOTH;
-        textPanel = makeTextPanel(currentEvent.baseString);
-        this.add(textPanel, c);
-        c.gridwidth = 3;
-        c.gridheight = 3;
-        c.weightx = 1;
-        c.weighty = 1;
-        c.gridx = 0;
-        c.gridy = 1;        
-        //c.weightx = ;
-        //c.weighty = 0.1;
-        eventPanel = makeEventPanel(currentEvent);
-        this.add(eventPanel, c);
         
+
+        eventPanel = makeEventPanel(currentEvent);
+
+
+        textPanel = makeTextPanel(currentEvent.baseString);
+
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+        Dimension d0 = new Dimension(Integer.MAX_VALUE, (int) (this.getHeight() * 0.05));
+        Dimension d1 = new Dimension(Integer.MAX_VALUE, (int) (this.getHeight() * 0.65));
+        Dimension d2 = new Dimension(Integer.MAX_VALUE, (int) (this.getHeight() * 0.30));
+
+        statpanel.setPreferredSize(d0);
+        statpanel.setMaximumSize(d0);
+        statpanel.setMinimumSize(d0);
+
+        eventPanel.setPreferredSize(d1);
+        eventPanel.setMaximumSize(d1);
+        eventPanel.setMinimumSize(d1);
+
+        textPanel.setPreferredSize(d2);
+        textPanel.setMaximumSize(d2);
+        textPanel.setMinimumSize(d2);
+
+        this.add(statpanel);
+        this.add(Box.createVerticalGlue());
+        this.add(eventPanel);
+        this.add(Box.createVerticalGlue());
+        this.add(textPanel);
+        this.add(Box.createVerticalGlue());
+
+        screen = this;
         this.revalidate();
         this.repaint();
         this.setVisible(true);
     }
 
+    public void refreshStatPanel() {
+
+        str.setText(String.join("", htmlHeading, "Str: ", Integer.toString(pData.str), htmlEnding));
+        intel.setText(String.join("", htmlHeading, "Int: ", Integer.toString(pData.intel), htmlEnding));
+        con.setText(String.join("", htmlHeading, "Con: ", Integer.toString(pData.con), htmlEnding));
+        wis.setText(String.join("", htmlHeading, "Wis: ", Integer.toString(pData.wis), htmlEnding));
+        cha.setText(String.join("", htmlHeading, "Cha: ", Integer.toString(pData.cha), htmlEnding));
+
+        statpanel.repaint();
+        this.revalidate();
+    }
 
 
 
@@ -160,7 +170,7 @@ public class MainScreen extends JPanel {
         textPanel.setBorder(new LineBorder(Color.WHITE, 10));
         
         textLabel = new JLabel(text);
-        textLabel.setFont(new Font("Verdana",1,30));
+        //textLabel.setFont(new Font("Verdana",1,30));
         textLabel.setForeground(Color.WHITE);
         textLabel.setVisible(true);
         textPanel.add(textLabel);
@@ -185,7 +195,7 @@ public class MainScreen extends JPanel {
         c3.weightx = 1;
         c3.weighty = 1;
         eventTextPanel.add(eventTextLabel, c3);
-        eventTextPanel.setBackground(Color.gray);
+        eventTextPanel.setBackground(Color.white);
         c.fill = GridBagConstraints.BOTH;
         //c.ipadx = 50;
         //c.ipady = 25;
@@ -220,30 +230,6 @@ public class MainScreen extends JPanel {
         for (int i = 0; i < event.numOfChoices; i++) {
             //JButton choiceButton = new JButton(event.choiceStrings[i]);
             ChoiceButton choiceButton = new ChoiceButton(this, currentEvent, i);
-            /*
-            /* 
-            final int finI = i;
-            choiceButton.addActionListener((ActionListener) new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    event.choiceAction(finI);
-                }
-            });;
-            
-            MouseListener ml = new MouseAdapter() {
-                @Override
-                public void mouseEntered(MouseEvent e) {
-                    //panel.setBorder(new LineBorder(Color.RED, 10));
-
-
-                }
-                @Override
-                public void mouseExited(MouseEvent e) {
-                    //panel.setBorder(new LineBorder(Color.BLUE, 10));
-                }
-            };
-            */
-            
-            
 
             c2.gridy = i;
             eventChoicePanel.add(choiceButton, c2);
@@ -258,6 +244,7 @@ public class MainScreen extends JPanel {
 
     public void choiceMade(int choiceId) {
         currentEvent.choiceAction(choiceId);
+
     }
 
     public void updateTextBox(String text) {
@@ -266,35 +253,5 @@ public class MainScreen extends JPanel {
 
 
     
-/* 
-    public static void main(String[] args) {
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.create(); 
-        Reader reader;
-        try {
-            reader = new FileReader(MainScreen.class.getClassLoader().getResource("").getPath()+ "personal/saves/save");
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return;
-        }
-        PlayerData[] data = gson.fromJson(reader, PlayerData[].class);
-        JFrame frameA = new JFrame();
-        frameA.add(new MainScreen(pData));
-        frameA.setVisible(true);
-        Thread t = new Thread(() -> {
-            while(true) {
-                try {
-                    Thread.sleep(20);
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-                frameA.repaint();
-            }
-        });
-        t.start();
-    }
-    */
 }
  

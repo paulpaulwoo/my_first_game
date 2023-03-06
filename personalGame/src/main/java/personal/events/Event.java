@@ -17,6 +17,7 @@ public class Event {
     public int numOfChoices;
     public String[] choiceStrings;
     public String baseChoiceString;
+
     
     public static void Init() {
         Event event = new FirstEvent();
@@ -43,6 +44,32 @@ public class Event {
         System.out.println("EventId : " + id);
         return events.get(id);
     } 
+
+    public static String parseEvent(String eventName, int fontSize, String mainString) {
+        StringBuilder returnString = new StringBuilder("<html><head><style>h1 {color: black;font-family:'Courier New';font-size: 400%;padding-bottom:300%;}body {color: black;font-family:'Courier New';font-size: ");
+        returnString.append(fontSize);
+        returnString.append("%;}</style></head><body><h1><br>");
+        returnString.append(eventName);
+        returnString.append("<br><br></h1><h2>");
+        
+        String[] splitString = mainString.split(" ");
+        int currentLength = 0;
+        for (int i = 0; i < splitString.length; i++) {
+            if (currentLength + splitString[i].length() > 55) {
+                returnString.append("<br>");
+                currentLength = 0;
+            }
+            returnString.append(splitString[i]);
+            returnString.append(" ");
+            currentLength = currentLength + splitString[i].length() + 1;
+        }
+        returnString.append("</h2></body></html>");
+
+
+        
+
+        return returnString.toString();
+    }
 
     //TEST
     

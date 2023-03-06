@@ -1,67 +1,42 @@
 package personal.events;
 
-import personal.player.PlayerData;
-import personal.GameEngine;
 import personal.UI.MainScreen;
 // GameEngine.currentData
 
 public class FirstEvent extends Event {
-    static String[] choiceStrings = new String[] {"First Option", "Second Option"};
-    //static final String baseString = "<html><head><style>body {background-color: linen;}h1 {color: maroon;margin-left: 40px;}</style></head><body><h1>This is a heading</h1><p>This is a paragraph.</p></body></html>"; 
 
-    static final String baseString = String.join("",
-    "<html>",
-    "<head>",
-    "<style>",
-    "h1 {",
-       "color: black;",
-       "font-family:'Courier New';",
-       "font-size: 500%;",
-       "padding-bottom:500%;",
-    "}",
-     "</style>",
-     "</head>",
-     "<body>",
-     
-     "<h1><br>The beginning<br><br></h1>",
-     "<h2>You wake up in a white room you never seen before.",
-     "<br>There is nothing in sight. You realize that you don't",
-     "<br>remember anything at all. Your mind is a blur, and you",
-     "<br>slowly try to regain some memory about yourself.",
-     "<br>Before this came to this room, you were.....",
-     //"<br> Help me...... Why am I typing this all<br> on my own..... now I will use copy paste",
-     //"<br> Help me...... Why am I typing this all<br> on my own..... now I will use copy paste",
-     
-     
-    "</h2>",
-     
-     "</body>",
-     "</html>"
-    );
+    static String[] choiceStrings = new String[]{"Strong with fights", "Smart with studies", "Clever with words"};
+    
+    static final String baseString = Event.parseEvent("The Beginning", 100, "You awaken in a sterile white room, disoriented and without any memory of how you arrived. Nothing is visible in the stark surroundings, and you struggle to recall even basic details about yourself. The silence is deafening as you try to make sense of your situation. Your mind is a haze, but you begin to piece together fragments of your past. You remember a childhood, a family, a life before this empty room. When you were young, you were....");
+
     public FirstEvent() {
-        //super("This is my first Event...", "Something Happened....", 2, choiceStrings, 1);
-        super("This is my first Event...", baseString, 2, choiceStrings, 1);
+        super("<html><h1>This is my first Event...</h1></html>", baseString, 3, choiceStrings, 1);
     }
     @Override
     public void choiceAction(int choice) {
         if (choice == 0) {
-            //nextEventId = 1;//
-            /*for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
-                System.out.println(ste + "\n");
-            } */
             nextEventId = 2;
-            GameEngine.engine.combatSequenceInit(null, null);
+            MainScreen.pData.str += 4;
+            MainScreen.screen.refreshStatPanel();
         } else if (choice == 1) {
-            System.out.println("need more Events......");
+            nextEventId = 2;
+            MainScreen.pData.intel += 4;
+            MainScreen.screen.refreshStatPanel();
+        } else if (choice == 2) {
+            nextEventId = 2;
+            MainScreen.pData.cha += 4;
+            MainScreen.screen.refreshStatPanel();
         }
-    }
+    }   
 
     @Override
     public String getChoiceStringDialogue(int choice) {
         if (choice == 0) {
-            return "Let's pick this....";
+            return "<html><h1>I was very strong. Sure, I lost some fights....<br>but I did make them pay.</h1></html>";
         } else if (choice == 1) {
-            return "Not ready yet!";
+            return "<html><h1>I excelled in my studies. I understood hard concepts in a breeze.</h1></html>";
+        } else if (choice == 2) {
+            return "<html><h1>I was pretty clever. Whenever I was in a pinch, I was able<br> to get myself out of it with my two inch tounge.</h1></html>";
         }
         return "Not ready yet!";
     }
