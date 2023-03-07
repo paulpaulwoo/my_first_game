@@ -31,12 +31,13 @@ public class MainScreen extends JPanel {
     public JLabel wis;
     public JLabel cha;
 
-
     Event currentEvent;
+    public static int nextEventId;
     public static PlayerData pData;
     private static final String htmlEnding = "</h1><html>";
     private static final String htmlHeading = "<html><h1>";
     public static MainScreen screen;
+
     public MainScreen(PlayerData data) {
         pData = data;
         GameEngine.frameClear();
@@ -51,7 +52,7 @@ public class MainScreen extends JPanel {
         eventPanel = makeEventPanel(currentEvent);
 
 
-        textPanel = makeTextPanel(currentEvent.baseString);
+        textPanel = makeTextPanel(currentEvent.baseChoiceString);
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -186,7 +187,7 @@ public class MainScreen extends JPanel {
         eventPanel.setBorder(new LineBorder(Color.BLACK, 5));
         eventTextPanel = new JPanel();        
         eventTextPanel.setLayout(new GridBagLayout());
-        eventTextLabel = new JLabel(event.baseChoiceString);
+        eventTextLabel = new JLabel(event.getBaseString());
         eventTextLabel.setHorizontalAlignment(SwingConstants.CENTER);
         eventTextLabel.setVerticalAlignment(SwingConstants.NORTH);
         GridBagConstraints c3 = new GridBagConstraints();
@@ -207,10 +208,9 @@ public class MainScreen extends JPanel {
         c.gridy = 0;
         eventPanel.add(eventTextPanel, c);
 
+
         c.gridx = 3;
         c.gridy = 0;
-        //c.ipadx = 50;
-        //c.ipady = 25;
         c.gridwidth = 1;
         c.gridheight = 3;
         c.weightx = 0.3;
@@ -242,14 +242,46 @@ public class MainScreen extends JPanel {
         return eventPanel;
     }
 
+    public void refreshEventPanel() {
+        eventTextLabel.setText(currentEvent.getBaseString());
+        eventChoicePanel.removeAll();
+        GridBagConstraints c2 = new GridBagConstraints();
+        c2.ipadx = 50;
+        c2.ipady = 25;
+        c2.gridwidth = 1;
+        c2.gridheight = 1;
+        c2.weightx = 0.3;
+        c2.weighty = 0.3;
+        c2.gridx = 0;
+        
+        for (int i = 0; i < currentEvent.numOfChoices; i++) {
+            //JButton choiceButton = new JButton(event.choiceStrings[i]);
+            ChoiceButton choiceButton = new ChoiceButton(this, currentEvent, i);
+            c2.gridy = i;
+            eventChoicePanel.add(choiceButton, c2);
+        }
+        eventPanel.repaint();
+    }
+
+    public void refreshTextPanel() {
+        textLabel.setText(currentEvent.baseChoiceString);
+        textLabel.repaint();
+    }
+
     public void choiceMade(int choiceId) {
         currentEvent.choiceAction(choiceId);
+    }
 
+    public void nextEvent() {
+        currentEvent = Event.getEvent(nextEventId);
+        refreshEventPanel();
+        refreshTextPanel();
     }
 
     public void updateTextBox(String text) {
         textLabel.setText(text);
     }
+
 
 
     

@@ -38,7 +38,6 @@ public class Player extends Entity{
         //setting X and Y coords
         //Walk right animation 
         imageArray[1] = new BufferedImage[walkRight_totalFrames];
-        
         for (int i = 0; i < walkRight_totalFrames; i++) {
             try {
                 imageArray[1][i] = ImageIO.read(getClass().getResource("sprites/walkRight_" + (1+ i) + ".png"));
@@ -123,6 +122,7 @@ public class Player extends Entity{
         //        e.printStackTrace();
         //    }
         //}
+
         imageArray[10] = new BufferedImage[1]; // AttackRight
         for (int i = 0; i < 1; i++) {
             try {
@@ -142,7 +142,7 @@ public class Player extends Entity{
         imageArray[12] = new BufferedImage[1]; // AttackUp
         for (int i = 0; i < 1; i++) {
             try {
-                imageArray[12][i] = ImageIO.read(getClass().getResource("sprites/walkUp_" + (2) + ".png"));
+                imageArray[12][i] = ImageIO.read(getClass().getResource("sprites/walkUp_" + (1) + ".png"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -150,7 +150,7 @@ public class Player extends Entity{
         imageArray[13] = new BufferedImage[1]; // AttackDown
         for (int i = 0; i < 1; i++) {
             try {
-                imageArray[13][i] = ImageIO.read(getClass().getResource("sprites/walkDown_" + (2) + ".png"));
+                imageArray[13][i] = ImageIO.read(getClass().getResource("sprites/walkDown_" + (1) + ".png"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -273,6 +273,7 @@ public class Player extends Entity{
 
                 case 9: 
                 currentFrame = 0;
+                divider = 10;
                 changeState(9 + lookDirection);
                 break;
 
@@ -359,8 +360,7 @@ public class Player extends Entity{
             currentFrame = 0;
             changeReady = true;
         }
-        super.paintComponent(g);
-        //imageArray_walkRight[currentFrame].drawImage()
+        //super.paintComponent(g);
         Graphics2D g2d = (Graphics2D)(g);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparancy));
         g2d.drawImage(imageArray[state][currentFrame / divider], 0, 0, this.getWidth(), this.getHeight(), this);
@@ -401,7 +401,7 @@ public class Player extends Entity{
             return;
         }
 
-        Slashattack slashAttack = new Slashattack(1, direction, (Entity) this, 10, this.position, 15, GameEngine.engine.loader);
+        Slashattack slashAttack = new Slashattack(direction, (Entity) this, 10, this.position, 15, GameEngine.loader);
         GameEngine.engine.frame.getLayeredPane().add(slashAttack);
         GameEngine.engine.frame.getLayeredPane().setLayer(slashAttack, 1900);
         delay = attackFrames;

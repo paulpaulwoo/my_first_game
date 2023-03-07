@@ -1,16 +1,15 @@
 package personal;
 import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Stack;
 import java.util.concurrent.locks.ReentrantLock;
 
 import javax.imageio.ImageIO;
+
+import personal.attacks.Attack;
 
 
 public class Loader { //class to load in images and store it in Ram rather than using File IO
@@ -38,6 +37,9 @@ public class Loader { //class to load in images and store it in Ram rather than 
             images.put(Integer.valueOf(toLoad.get(i).identifier), animation);
         }
     }
+
+
+
 
 
 
@@ -98,14 +100,31 @@ public class Loader { //class to load in images and store it in Ram rather than 
             images.put(Integer.valueOf(currentAnimation.identifier), animation);
     }
 
+
+    public static BufferedImage[] getRotatedAnimation(BufferedImage[] original, int animationLength, int originalDirection, int rotateDirection) {
+        BufferedImage[] rotatedImages = new BufferedImage[animationLength];
+        int degrees = Attack.getRotationDegrees(originalDirection, rotateDirection);
+        for(int i = 0; i < animationLength; i++) {
+            rotatedImages[i] = Attack.rotate(original[i], degrees, original[i].getWidth(), original[i].getHeight());
+        }
+        return rotatedImages;
+    }
+
     public void combatLoad() {
         mutex.lock();
+
         loadIndividual(new loadedImage("./effects/slash/slash (", ").png", 10, 1));
+        images.put(2, getRotatedAnimation(images.get(1), 10, 1, 2));
+        images.put(3, getRotatedAnimation(images.get(1), 10, 1, 3));
+        images.put(4, getRotatedAnimation(images.get(1), 10, 1, 4));
         mutex.unlock();
     }
 
     public void combatUnload() {
         unLoad(1);
+        unLoad(2);
+        unLoad(3);
+        unLoad(4);
     }
 
     public BufferedImage[] getImages (int identifier) {

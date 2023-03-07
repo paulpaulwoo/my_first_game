@@ -53,6 +53,29 @@ public class Attack extends Entity {
         this.setBounds(position[0], position[1], width, height);
         Sound.playSound(soundId);
     }
+
+    public Attack(int totalFrames, int direction, int animationFrames, int divider, BufferedImage[] imageArray, Entity source, boolean piercing, int damage, int iFrames, int sprite_width, int sprite_height, int width, int height, int soundId, int soundHitId) {
+        super(sprite_width, sprite_height, width, height, 0, 0, 0, -1, -1);
+        GameEngine.engine.frame.getLayeredPane().setLayer(this, 3000);
+        this.totalFrames = totalFrames;
+        this.direction = direction;
+        this.animationFrames = animationFrames;
+        this.divider = divider;
+        this.source = source;
+        this.piercing = piercing;
+        this.damage = damage;
+        this.iFrames = iFrames;
+        currentFrame = 0;
+        this.imageArray = imageArray;
+        this.position = setPosition(source.position, direction, width, height, source);
+        this.displayArray = imageArray;
+        this.soundId = soundId;
+        this.soundHitId = soundHitId;
+        hitTracker = new HashSet<Entity>();
+        this.setBounds(position[0], position[1], width, height);
+        Sound.playSound(soundId);
+    }
+
     
     private int [] setPosition(int [] position, int direction, int width, int height, Entity source) {// init for position based on height and width, direction
         int[] returnpos = new int[2];
@@ -124,7 +147,7 @@ public class Attack extends Entity {
         // Getting Dimensions of image        
         // Creating a new buffered image
         BufferedImage newImage = new BufferedImage(width, height, img.getType()); //hack, png is 5
-         
+        
         // creating Graphics in buffered image
         Graphics2D g2 = newImage.createGraphics();
          
@@ -139,7 +162,6 @@ public class Attack extends Entity {
     }
     
     public void attackLogic(Entity source, Entity target) {
-        System.out.println("ATTACK HIT, didn't override");
         // TODO: Develop attack logic, including being stunned, lowering hp, and invincibility frames
         Sound.playSound(soundHitId);
     };
@@ -147,7 +169,7 @@ public class Attack extends Entity {
 
     public void update() {
         if (totalFrames <= 0) {
-            GameEngine.engine.toRemove.add(this);
+            GameEngine.toRemove.add(this);
         }
         for (int i = 0; i < entities.size(); i++) {
             if ((colisionCheck(direction, this, entities.get(i)) == false) && (!hitTracker.contains(entities.get(i))) && (!entities.get(i).invincible)) {
@@ -164,8 +186,6 @@ public class Attack extends Entity {
         if (currentFrame >= imageArray.length * divider)  {
             currentFrame = 0;
         }
-        super.paintComponent(g);
-//        imageArray_walkRight[currentFrame].drawImage()
         g.drawImage(displayArray[currentFrame / divider], 0, 0, this.getWidth(), this.getHeight(), this);
     }
 

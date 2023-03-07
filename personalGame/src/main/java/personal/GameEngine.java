@@ -104,21 +104,7 @@ public class GameEngine implements KeyListener {
     public void initComponents() {
         combatComponents.add(new HpBar(player));
     }
-    /*
-    public void run(GameEngine game) {
-        Thread thread = new Thread(() -> {
-            while (true) {
-                try {
-                    Thread.sleep(20);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                game.update();
-            }
-        });
-        thread.start();
-    }
-    */
+
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {
@@ -138,7 +124,11 @@ public class GameEngine implements KeyListener {
         }
     }
 
-    public void combatSequenceInit(Background background, ArrayList<Enemy> eventEnemies) {
+    public void testCombat() {
+        
+    }
+
+    public void combatSequenceInit(ArrayList<Enemy> eventEnemies) {
         frame.getLayeredPane().invalidate();
         frame.getLayeredPane().removeAll();
         frame.getLayeredPane().validate();
@@ -148,7 +138,7 @@ public class GameEngine implements KeyListener {
         Sound.loadSounds(Sound.combatSounds);
 
         //TO CHANGE DYNAMICALLY
-        background = new Background();
+        Background background = new Background();
         Amg a = new Amg(player, 200, 200);
         enemies.add(a);
         //TO CHANGE END
@@ -240,19 +230,12 @@ public class GameEngine implements KeyListener {
         for (int i = 0; i < Entity.entities.size(); i++) {
             Entity.entities.get(i).update();
             frame.getLayeredPane().setLayer(Entity.entities.get(i), Entity.entities.get(i).getPosition()[1]);
-            if (Entity.entities.get(i) instanceof Attack) {
-                frame.getLayeredPane().setLayer(Entity.entities.get(i), 3000);
-            }
-            Entity.entities.get(i).repaint();
-        }
-        for (int i = 0; i < uiComponents.size(); i++) {
-            uiComponents.get(i).repaint();
         }
         for (int i = 0; i < toRemove.size(); i++) {
             Entity.entities.remove(toRemove.get(i));
-            frame.getLayeredPane().remove(toRemove.get(i));
-        }
-        frame.getLayeredPane().revalidate();
+            frame.getLayeredPane().remove(toRemove.get(i));   
+        }     
+        frame.repaint();
     }
 
 

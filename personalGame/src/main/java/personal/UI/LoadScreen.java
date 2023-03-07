@@ -18,7 +18,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -46,7 +45,7 @@ public class LoadScreen extends JPanel {
     JPanel currentPanel;
     public LoadScreen() {
         screen = this;
-        JFrame frame = GameEngine.frameClear();
+        GameEngine.frameClear();
         saves = new PlayerData[4];
         //URL url = this.getClass().getClassLoader().getResource("personal/saves/save");
         File fileCheck = new File(this.getClass().getClassLoader().getResource("").getPath()+ "personal/saves/save");

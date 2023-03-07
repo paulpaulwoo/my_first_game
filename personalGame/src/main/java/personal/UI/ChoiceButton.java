@@ -1,12 +1,9 @@
 package personal.UI;
 
-import javax.swing.JButton;
-import javax.swing.JComponent;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
-import java.awt.Component;
-import java.awt.Graphics;
 import personal.events.Event;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
@@ -42,7 +39,6 @@ public class ChoiceButton extends JPanel {
         this.addMouseListener( new MouseListener() {
             @Override
     public void mouseClicked(MouseEvent e) {
-        // TODO Auto-generated method stub
         mainScreen.choiceMade(choiceId);
         System.out.println("Clicked");
         // execute function
@@ -50,7 +46,6 @@ public class ChoiceButton extends JPanel {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        // TODO Auto-generated method stub
         // click animation
         isClicked = true; 
         setBorder(new LineBorder(pressedBorderColor, 10));
@@ -61,7 +56,6 @@ public class ChoiceButton extends JPanel {
     @Override
     public void mouseReleased(MouseEvent e) {
         isClicked = false;
-        // TODO Auto-generated method stub
         if (!isInside) {
             setBorder(new LineBorder(hoverBorderColor, 10));
             setBackground(hoverBackgroundColor);
@@ -77,7 +71,6 @@ public class ChoiceButton extends JPanel {
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        // TODO Auto-generated method stub
         isInside = true;
         if (!isClicked) {
             setBorder(new LineBorder(hoverBorderColor, 10));
@@ -89,7 +82,6 @@ public class ChoiceButton extends JPanel {
 
     @Override
     public void mouseExited(MouseEvent e) {
-        // TODO Auto-generated method stub
         isInside = false;
         // remove mouse entered effects
         if (!isClicked) {
@@ -98,7 +90,7 @@ public class ChoiceButton extends JPanel {
             repaint();
         }
         // exit clicking mode
-        mainScreen.updateTextBox(event.baseString);
+        mainScreen.updateTextBox(event.baseChoiceString);
     }
         });
         //System.out.println(getText());

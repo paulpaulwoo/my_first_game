@@ -55,7 +55,8 @@ public class PlayerData implements Serializable{
         con = 7;
         wis = 7;
         cha = 7;
-
+        gold = 0;
+        karma = 0;
     }
     
 }

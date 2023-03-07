@@ -2,11 +2,8 @@ package personal.events;
 
 import java.util.HashMap;
 import java.util.LinkedList;
-import personal.GameEngine;
 
 // GameEngine.currentData
-import personal.player.PlayerData;
-
 public class Event {
     public static int totalEvents = 1;
     public static HashMap<Integer, Event> events = new HashMap<>();
@@ -17,16 +14,18 @@ public class Event {
     public int numOfChoices;
     public String[] choiceStrings;
     public String baseChoiceString;
+    public String eventName;
 
     
     public static void Init() {
-        Event event = new FirstEvent();
-        events.put(1, event);
+        events.put(1, new FirstEvent());
+        events.put(2, new SecondEvent());
     }
 
-    public Event(String baseString, String baseChoiceString, int numOfChoices, String[] choiceStrings, int id) {
+    public Event(String baseString, String baseChoiceString, String eventName, int numOfChoices, String[] choiceStrings, int id) {
         this.baseString = baseString;
         this.baseChoiceString = baseChoiceString;
+        this.eventName = eventName;
         this.numOfChoices = numOfChoices;
         this.choiceStrings = choiceStrings;
         this.id = id;
@@ -40,19 +39,28 @@ public class Event {
     public void choiceAction(int choice) {
         //for Override
     }
+
     public static Event getEvent(int id) {
         System.out.println("EventId : " + id);
         return events.get(id);
     } 
 
-    public static String parseEvent(String eventName, int fontSize, String mainString) {
+    public String getBaseString() {
+        return this.parseEvent(100);
+    }
+
+    public void changeString(String updateString) {
+        this.baseString = updateString;
+    }
+
+    public String parseEvent(int fontSize) {
         StringBuilder returnString = new StringBuilder("<html><head><style>h1 {color: black;font-family:'Courier New';font-size: 400%;padding-bottom:300%;}body {color: black;font-family:'Courier New';font-size: ");
         returnString.append(fontSize);
         returnString.append("%;}</style></head><body><h1><br>");
         returnString.append(eventName);
         returnString.append("<br><br></h1><h2>");
         
-        String[] splitString = mainString.split(" ");
+        String[] splitString = baseString.split(" ");
         int currentLength = 0;
         for (int i = 0; i < splitString.length; i++) {
             if (currentLength + splitString[i].length() > 55) {
@@ -64,12 +72,9 @@ public class Event {
             currentLength = currentLength + splitString[i].length() + 1;
         }
         returnString.append("</h2></body></html>");
-
-
-        
-
         return returnString.toString();
     }
+
 
     //TEST
     

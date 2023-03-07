@@ -1,13 +1,9 @@
 package personal.UI;
 
 import javax.swing.JPanel;
-
 import java.awt.Color;
 import java.awt.Graphics;
-
-import personal.Entity;
 import personal.player.PlayerData;
-import personal.GameEngine;
 public class MainHpBar extends JPanel {
     PlayerData playerData;
 
