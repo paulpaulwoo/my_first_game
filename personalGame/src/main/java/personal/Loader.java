@@ -16,12 +16,13 @@ public class Loader { //class to load in images and store it in Ram rather than 
                       //every single time
         
     public Map<Integer, BufferedImage []> images = new HashMap<>();
-    private ReentrantLock mutex = new ReentrantLock(true);
+    public ReentrantLock mutex = new ReentrantLock(true);
     
     public Loader() {
 
     }
     
+
     public Loader (ArrayList<loadedImage> toLoad) { // sizes = array of each of the 
         for (int i = 0; i < toLoad.size(); i++) {
             BufferedImage[] animation = new BufferedImage[toLoad.get(i).animationLength];
@@ -40,7 +41,9 @@ public class Loader { //class to load in images and store it in Ram rather than 
 
 
 
-
+    public void unLoadAll() {
+        images = new HashMap<>();
+    }
 
 
     public void Load(ArrayList<loadedImage> toLoad) {

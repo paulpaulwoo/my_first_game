@@ -10,13 +10,14 @@ import personal.UI.HpBar;
 import personal.UI.LoadScreen;
 import personal.UI.MainScreen;
 import personal.UI.NewgameScreen;
+import personal.UI.PauseScreen;
 import personal.UI.TitleScreen;
 import personal.enemy.Amg;
 import personal.enemy.Enemy;
 import personal.events.Event;
 import personal.player.Player;
 import personal.player.PlayerData;
-import personal.attacks.Attack;
+
 
 public class GameEngine implements KeyListener {
     public static boolean DEBUG = false;
@@ -35,6 +36,7 @@ public class GameEngine implements KeyListener {
     private boolean upkeyPressed;
     private boolean downkeyPressed;
     private boolean spacePressed;
+    private boolean escapePressed;
     public ArrayList<loadedImage> toLoad= new ArrayList<>();
     public static Loader loader;
     public static ArrayList<JPanel> uiComponents = new ArrayList<>();
@@ -42,8 +44,8 @@ public class GameEngine implements KeyListener {
     public static String saveString;
     public static PlayerData currentData;
     public static int saveIndex; 
-    
-    
+    public static boolean isPaused = false;
+    public static PauseScreen pauseScreen;
 
     public GameEngine() {
         engine = this;
@@ -59,11 +61,7 @@ public class GameEngine implements KeyListener {
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.addKeyListener(this);
-
-
-
         Event.Init();
-
         loader = new Loader();
         player = new Player();
         frame.setLocationRelativeTo(null);
@@ -84,6 +82,15 @@ public class GameEngine implements KeyListener {
     public void loadSequenceInit() {
         JPanel panel = new LoadScreen();
         frame.getLayeredPane().add(panel);
+    }
+
+    public void clearCombat() {
+        loader.unLoad(frameHeight);
+        Sound.unloadAll();
+        combatComponents = new ArrayList<>();
+        uiComponents = new ArrayList<>();
+        enemies = new ArrayList<>();
+        player = new Player();
     }
     
     public void titleSequenceInit() {
@@ -122,11 +129,12 @@ public class GameEngine implements KeyListener {
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
             spacePressed = true;
         }
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            escapePressed= true;
+        }
     }
 
-    public void testCombat() {
-        
-    }
+
 
     public void combatSequenceInit(ArrayList<Enemy> eventEnemies) {
         frame.getLayeredPane().invalidate();
@@ -136,7 +144,8 @@ public class GameEngine implements KeyListener {
         uiComponents.clear();
         loader.combatLoad();
         Sound.loadSounds(Sound.combatSounds);
-
+        loader.mutex.lock();
+        loader.mutex.unlock();
         //TO CHANGE DYNAMICALLY
         Background background = new Background();
         Amg a = new Amg(player, 200, 200);
@@ -184,13 +193,17 @@ public class GameEngine implements KeyListener {
 
     public void combatSequenceEnd() {
         uiComponents.clear();
-
+        
     }
 
     
     public void keyUpdate() {
         if (spacePressed == true) {
             keyPressed = KeyEvent.VK_SPACE;
+            return;
+        }
+        if (escapePressed) {
+            keyPressed = KeyEvent.VK_ESCAPE;
             return;
         }
         if (leftkeyPressed) {
@@ -224,9 +237,15 @@ public class GameEngine implements KeyListener {
 
     public void update() {
         keyUpdate();
+        if (escapePressed) {
+            keyPressed = 1;
+            combatPauseSequence();
+        }
         player.handleKey(keyPressed);
+        escapePressed = false;
         keyPressed = -1;
         spacePressed = false;
+        
         for (int i = 0; i < Entity.entities.size(); i++) {
             Entity.entities.get(i).update();
             frame.getLayeredPane().setLayer(Entity.entities.get(i), Entity.entities.get(i).getPosition()[1]);
@@ -238,6 +257,40 @@ public class GameEngine implements KeyListener {
         frame.repaint();
     }
 
+    public void combatPauseSequence () {
+        
+        isPaused = true;
+        Thread pauseThread = new Thread(() -> {
+            pauseScreen = new PauseScreen();
+            frame.getLayeredPane().add(pauseScreen);
+            frame.getLayeredPane().setLayer(pauseScreen, 4000);
+            
+            while(isPaused) {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+
+        });
+        pauseThread.start();
+        try {
+            pauseThread.join();
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        //mainThread.notify();
+    }
+
+    
+    public static void endPause() {
+        isPaused = false;
+        engine.frame.getLayeredPane().remove(pauseScreen);
+        engine.frame.getLayeredPane().revalidate();
+    }
 
     public static void gameOverSequence() {
         System.out.println("gameOver");

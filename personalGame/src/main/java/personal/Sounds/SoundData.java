@@ -1,7 +1,7 @@
 package personal.Sounds;
 
 import java.util.ArrayList;
-import java.util.Queue;
+
 import java.util.concurrent.Semaphore;
 
 import javax.sound.sampled.AudioFormat;

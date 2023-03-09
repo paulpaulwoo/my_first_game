@@ -22,6 +22,10 @@ public class Sound {
       soundIds.put(1, "Hit 3.wav");
     }
 
+    public static void unloadAll() {
+      soundData = new HashMap<>();
+    }
+
 
     public static void loadSound(int soundId, String url) {
       try {
@@ -40,9 +44,7 @@ public class Sound {
     }
     
     public static void playSound(int soundId) {
-      //TODO
-      //soundData.get(Integer.valueOf(soundId)).play();
-      
+
       SoundData.addQueue(soundData.get(Integer.valueOf(soundId)));
     } 
 

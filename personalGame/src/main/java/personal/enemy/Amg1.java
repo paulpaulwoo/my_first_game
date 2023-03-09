@@ -1,8 +1,6 @@
 package personal.enemy;
 
 import java.awt.image.BufferedImage;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import personal.player.Player;
@@ -13,11 +11,6 @@ import personal.attacks.Slashattack;
 import java.awt.Graphics2D;
 import java.awt.AlphaComposite;
 import java.lang.Math;
-import java.util.Map;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonIOException;
-import com.google.gson.JsonSyntaxException;
 
 public class Amg1 extends Entity {
     protected BufferedImage imageArray[][]; // i = state, j = frame
@@ -96,8 +89,6 @@ public class Amg1 extends Entity {
 
         imageArray[5] = new BufferedImage[spawn_totalFrames];
         for (int i = 0; i < spawn_totalFrames; i++) {
-            String adder = new String();
-
             try {
                 imageArray[5][i] = ImageIO.read(getClass().getResource("../effects/spawn/spawn (" + (i + 1) + ").png"));
             } catch (IOException e) {
@@ -470,13 +461,11 @@ public class Amg1 extends Entity {
         if (transparancy > 0) {
             transparancy -= 0.02f;
             if (transparancy <= 0) {
-                System.out.println("Removal");
-                GameEngine.engine.toRemove.add(this);
+                GameEngine.toRemove.add(this);
                 transparancy = 0.01f;
             }
         } else {
-            System.out.println("Death over");
-            GameEngine.engine.toRemove.add(this);
+            GameEngine.toRemove.add(this);
         }
     }
 
@@ -525,7 +514,7 @@ public class Amg1 extends Entity {
             return;
         }
 
-        Slashattack slashAttack = new Slashattack(1, direction, (Entity) this, 10, this.position, 15, GameEngine.engine.loader);
+        Slashattack slashAttack = new Slashattack(1, direction, (Entity) this, 10, this.position, 15, GameEngine.loader);
         GameEngine.engine.frame.getLayeredPane().add(slashAttack);
         GameEngine.engine.frame.getLayeredPane().setLayer(slashAttack, 1900);
         delay = slashAttack.totalFrames * 2;
@@ -567,19 +556,4 @@ public class Amg1 extends Entity {
 
 
 
-    public static void main(String[] args) {
-        //TEST
-        //JSONArray a = (JSONArray) parser.parse(new FileReader("c:\\exer4-courses.json"));
-        Gson g = new Gson();
-        try {
-            Map map = new Gson().fromJson(new FileReader("./enemies.json"), Map.class);
-        } catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        for (int i = 0; i < 10; i++) {
-
-        }
-        System.out.println();
-    }
 }

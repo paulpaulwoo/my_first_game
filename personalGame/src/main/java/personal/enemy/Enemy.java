@@ -318,11 +318,11 @@ public class Enemy extends Entity {
         if (transparancy > 0) {
             transparancy -= 0.02f;
             if (transparancy <= 0) {
-                GameEngine.engine.toRemove.add(this);
+                GameEngine.toRemove.add(this);
                 transparancy = 0.01f;
             }
         } else {
-            GameEngine.engine.toRemove.add(this);
+            GameEngine.toRemove.add(this);
         }
     }
 
@@ -372,7 +372,7 @@ public class Enemy extends Entity {
             return;
         }
 
-        Slashattack slashAttack = new Slashattack(1, direction, (Entity) this, 10, this.position, 15, GameEngine.engine.loader);
+        Slashattack slashAttack = new Slashattack(1, direction, (Entity) this, 10, this.position, 15, GameEngine.loader);
         GameEngine.engine.frame.getLayeredPane().add(slashAttack);
         GameEngine.engine.frame.getLayeredPane().setLayer(slashAttack, 1900);
         delay = slashAttack.totalFrames * 2;

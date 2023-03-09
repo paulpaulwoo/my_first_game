@@ -8,7 +8,6 @@ import personal.player.PlayerData;
 import java.awt.event.MouseListener;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import java.awt.event.MouseAdapter;
@@ -18,7 +17,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -27,7 +25,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.awt.Graphics2D;
 import javax.swing.border.LineBorder;
 import com.google.gson.Gson;
@@ -46,16 +43,17 @@ public class NewgameScreen extends JPanel {
     JPanel currentPanel;
     public NewgameScreen() {
         screen = this;
-        JFrame frame = GameEngine.frameClear();
+        GameEngine.frameClear();
         saves = new PlayerData[4];
         //URL url = this.getClass().getClassLoader().getResource("personal/saves/save");
         File fileCheck = new File(this.getClass().getClassLoader().getResource("").getPath()+ "personal/saves/save");
-        URL url;
+        //URL url;
 
         try {
-            url = fileCheck.toURI().toURL();
+            //url = fileCheck.toURI().toURL();
+            fileCheck.toURI().toURL();
         } catch (MalformedURLException e2) {
-            url = null;
+            //url = null;
             System.out.println("failed");
         }
 
@@ -155,10 +153,10 @@ public class NewgameScreen extends JPanel {
         //this.add(exitButton);
         this.setBounds(0, 0, 1024,900);
 
-        GameEngine.engine.run = true;
-        GameEngine.engine.mainThread = new Thread(() -> {
+        GameEngine.run = true;
+        GameEngine.mainThread = new Thread(() -> {
             
-            while (GameEngine.engine.run) {
+            while (GameEngine.run) {
                 try {
                     Thread.sleep(20);
                 } catch (InterruptedException e) {

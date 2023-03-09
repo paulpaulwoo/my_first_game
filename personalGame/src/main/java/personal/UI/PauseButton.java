@@ -1,6 +1,7 @@
 package personal.UI;
 
 
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
@@ -9,10 +10,7 @@ import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class ChoiceButton extends JPanel {
-    Event event;
-    int choiceId;
-    MainScreen mainScreen;
+public class PauseButton extends JPanel {
     static Color defaultBorderColor = new Color(200, 200, 200);
     static Color pressedBorderColor = new Color(120, 120, 120);
     static Color hoverBorderColor = new Color(180, 180, 180);
@@ -30,22 +28,19 @@ public class ChoiceButton extends JPanel {
 
     //function for overRide
     public void toExecute() {
-
     }
 
 
-    public ChoiceButton(MainScreen mainScreen, Event event, int choiceId) {
-        //super("abc");
-        this.mainScreen = mainScreen;
+    public PauseButton(String choiceString) {
         setBorder(new LineBorder(defaultBorderColor, 10));
         setBackground(defaultBackgroundColor);
         setForeground(Color.BLACK);
         //setText(event.choiceStrings[choiceId]);
-        this.add(new JLabel("<html><body>" + event.choiceStrings[choiceId] + "</body></html>" ));
+        this.add(new JLabel("<html><body>" + choiceString + "</body></html>" ));
         this.addMouseListener( new MouseListener() {
             @Override
     public void mouseClicked(MouseEvent e) {
-        mainScreen.choiceMade(choiceId);
+        toExecute();
     }
 
     @Override
@@ -81,7 +76,6 @@ public class ChoiceButton extends JPanel {
             setBackground(hoverBackgroundColor);
             repaint();
         }
-        mainScreen.updateTextBox(event.getChoiceStringDialogue(choiceId));
     }
 
     @Override
@@ -94,7 +88,6 @@ public class ChoiceButton extends JPanel {
             repaint();
         }
         // exit clicking mode
-        mainScreen.updateTextBox(event.baseChoiceString);
     }
         });
         //System.out.println(getText());

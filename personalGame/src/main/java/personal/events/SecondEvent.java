@@ -19,12 +19,12 @@ public class SecondEvent extends Event {
     public void choiceAction(int choice) {
         if (choice == 0) {
             MainScreen.nextEventId = 3;
-            MainScreen.pData.karma += 3;
+            MainScreen.pData.karma += 5;
             MainScreen.screen.refreshStatPanel();
         } else if (choice == 1) {
             GameEngine.engine.combatSequenceInit(null);
             MainScreen.nextEventId = 3;
-            MainScreen.pData.karma -=3;
+            MainScreen.pData.karma -=5;
             //MainScreen.screen.refreshStatPanel();
             
         }
