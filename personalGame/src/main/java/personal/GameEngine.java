@@ -85,12 +85,15 @@ public class GameEngine implements KeyListener {
     }
 
     public void clearCombat() {
+        Entity.resetEntities();
         loader.unLoad(frameHeight);
         Sound.unloadAll();
-        combatComponents = new ArrayList<>();
+        
         uiComponents = new ArrayList<>();
         enemies = new ArrayList<>();
         player = new Player();
+        initComponents();
+
     }
     
     public void titleSequenceInit() {
@@ -109,6 +112,7 @@ public class GameEngine implements KeyListener {
     }
 
     public void initComponents() {
+        combatComponents = new ArrayList<>();
         combatComponents.add(new HpBar(player));
     }
 

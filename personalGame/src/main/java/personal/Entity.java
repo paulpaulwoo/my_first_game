@@ -47,6 +47,10 @@ public class Entity extends JPanel {
         this.maxHP = maxHP;
     }
 
+    public static void resetEntities() {
+        entities = new ArrayList<>();
+    }
+
     public static boolean colisionCheck(int direction, Entity player, Entity enemy) { // false if collided
         int[] playerPosition = {player.position[0] + ((player.WIDTH - player.SPRITEWIDTH) / 2), player.position[1] + ((player.HEIGHT - player.SPRITEHEIGHT) / 2)};
         int[] enemyPosition = {enemy.position[0] + ((enemy.WIDTH - enemy.SPRITEWIDTH) / 2), enemy.position[1] + ((enemy.HEIGHT - enemy.SPRITEHEIGHT) / 2)};
