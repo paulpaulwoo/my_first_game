@@ -12,7 +12,7 @@ import java.awt.AlphaComposite;
 //sprite created by sylvius fischer
 
 public class Player extends Entity{
-    
+     
 
     private BufferedImage imageArray[][]; // i = state, j = frame
     private int lookDirection; // changed by change state, 1 : right, 2 : left, 3 : up, 4 : down

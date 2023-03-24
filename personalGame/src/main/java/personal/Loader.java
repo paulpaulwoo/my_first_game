@@ -9,6 +9,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javax.imageio.ImageIO;
 
+import personal.Sounds.Sound;
 import personal.attacks.Attack;
 
 
@@ -115,7 +116,7 @@ public class Loader { //class to load in images and store it in Ram rather than 
 
     public void combatLoad() {
         mutex.lock();
-
+        Sound.loadSounds(Sound.combatSounds);
         loadIndividual(new loadedImage("./effects/slash/slash (", ").png", 10, 1));
         images.put(2, getRotatedAnimation(images.get(1), 10, 1, 2));
         images.put(3, getRotatedAnimation(images.get(1), 10, 1, 3));
@@ -123,11 +124,19 @@ public class Loader { //class to load in images and store it in Ram rather than 
         mutex.unlock();
     }
 
+    public void combatLoad_Thread() {
+        Thread loadThread = new Thread(() -> {
+            combatLoad();
+        });
+        loadThread.start();
+    }
+
     public void combatUnload() {
         unLoad(1);
         unLoad(2);
         unLoad(3);
         unLoad(4);
+        Sound.unloadAll();
     }
 
     public BufferedImage[] getImages (int identifier) {

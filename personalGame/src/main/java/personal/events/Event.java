@@ -3,6 +3,8 @@ package personal.events;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import personal.GameEngine;
+
 // GameEngine.currentData
 public class Event {
     public static int totalEvents = 1;
@@ -29,6 +31,7 @@ public class Event {
         this.numOfChoices = numOfChoices;
         this.choiceStrings = choiceStrings;
         this.id = id;
+    
     }
 
     public String getChoiceStringDialogue(int choice) {
@@ -51,6 +54,11 @@ public class Event {
 
     public void changeString(String updateString) {
         this.baseString = updateString;
+    }
+
+    //for override
+    public void eventEncounterEvoke() {
+
     }
 
     public String parseEvent(int fontSize) {

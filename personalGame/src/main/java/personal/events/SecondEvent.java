@@ -11,26 +11,30 @@ public class SecondEvent extends Event {
     //static final String baseString = Event.parseEvent("The Beginning", 100, "You remeber this and this and that... blah blah blah....... random ass characters.........");
 
     public SecondEvent() {
-        super("Error", "<html><h1>This is my Second Event...</h1></html>", "Second event test", 2, choiceStrings, 1);
+        super("Error", "<html><h1>What did I want again...</h1></html>", "Motivations", 2, choiceStrings, 1);
+
     }
 
 
     @Override
     public void choiceAction(int choice) {
         if (choice == 0) {
-            MainScreen.nextEventId = 3;
+            MainScreen.nextEventId = 2;
             MainScreen.pData.karma += 5;
             MainScreen.screen.refreshStatPanel();
         } else if (choice == 1) {
             GameEngine.engine.combatSequenceInit(null);
-            MainScreen.nextEventId = 3;
+            MainScreen.nextEventId = 2;
             MainScreen.pData.karma -=5;
             //MainScreen.screen.refreshStatPanel();
             
         }
     }  
 
-    
+    @Override
+    public void eventEncounterEvoke() {
+        GameEngine.loader.combatLoad_Thread();
+    }
 
     @Override
     public String getChoiceStringDialogue(int choice) {

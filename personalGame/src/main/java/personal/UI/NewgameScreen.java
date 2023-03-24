@@ -248,6 +248,7 @@ public class NewgameScreen extends JPanel {
     if (x == JOptionPane.YES_OPTION) {
         // start game
         //TODO: Implement start
+        GameEngine.currentData = saves[currentData];
         GameEngine.engine.mainSequenceInit(
             saves[currentData]
             );

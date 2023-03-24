@@ -86,14 +86,11 @@ public class GameEngine implements KeyListener {
 
     public void clearCombat() {
         Entity.resetEntities();
-        loader.unLoad(frameHeight);
-        Sound.unloadAll();
-        
+        loader.combatUnload();
         uiComponents = new ArrayList<>();
         enemies = new ArrayList<>();
         player = new Player();
         initComponents();
-
     }
     
     public void titleSequenceInit() {
@@ -103,6 +100,11 @@ public class GameEngine implements KeyListener {
 
     public void mainSequenceInit(PlayerData data) {
         JPanel panel = new MainScreen(data);
+        frame.getLayeredPane().add(panel);
+    }
+
+    public void mainSequenceResume() {
+        JPanel panel = new MainScreen();
         frame.getLayeredPane().add(panel);
     }
 
@@ -138,7 +140,9 @@ public class GameEngine implements KeyListener {
         }
     }
 
-
+    public void combatLoad() {
+        loader.combatLoad();
+    }
 
     public void combatSequenceInit(ArrayList<Enemy> eventEnemies) {
         frame.getLayeredPane().invalidate();
@@ -146,8 +150,6 @@ public class GameEngine implements KeyListener {
         frame.getLayeredPane().validate();
         frame.getLayeredPane().repaint();
         uiComponents.clear();
-        loader.combatLoad();
-        Sound.loadSounds(Sound.combatSounds);
         loader.mutex.lock();
         loader.mutex.unlock();
         //TO CHANGE DYNAMICALLY
@@ -195,9 +197,23 @@ public class GameEngine implements KeyListener {
 
     }
 
-    public void combatSequenceEnd() {
-        uiComponents.clear();
+    public static void combatSequenceEnd(int situation) {
+        if (situation == 0) {//to main screen from pause screen 
+            endPause();
+            frameClear();
+            GameEngine.engine.titleSequenceInit();
+            GameEngine.run = false;
+            GameEngine.engine.clearCombat();
+        }
         
+        if (situation == 1) { // player lost
+            
+        }
+
+        if (situation == 2) { // player won
+            engine.mainSequenceResume();
+        }
+
     }
 
     
@@ -244,6 +260,12 @@ public class GameEngine implements KeyListener {
         if (escapePressed) {
             keyPressed = 1;
             combatPauseSequence();
+        }
+        if (Entity.entities.size() == 1) {
+            if (Entity.entities.get(0) == player) {
+                run = false;
+                combatSequenceEnd(2);
+            }
         }
         player.handleKey(keyPressed);
         escapePressed = false;

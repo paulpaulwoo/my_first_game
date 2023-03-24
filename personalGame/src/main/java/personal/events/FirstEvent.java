@@ -12,7 +12,7 @@ public class FirstEvent extends Event {
 
 
     public FirstEvent() {
-        super("You awaken in a sterile white room, disoriented and without any memory of how you arrived. Nothing is visible in the stark surroundings, and you struggle to recall even basic details about yourself. The silence is deafening as you try to make sense of your situation. Your mind is a haze, but you begin to piece together fragments of your past. You remember a childhood, a family, a life before this empty room. When you were young, you were....", "<html><h1>This is my first Event...</h1></html>", "The Beginning", 3, choiceStrings, 1);
+        super("You awaken in a sterile white room, disoriented and without any memory of how you arrived. Nothing is visible in the stark surroundings, and you struggle to recall even basic details about yourself. The silence is deafening as you try to make sense of your situation. Your mind is a haze, but you begin to piece together fragments of your past. You remember a childhood, a family, a life before this empty room. When you were young, you were....", "<html><h1>What did I do... I'm struggling to remember...</h1></html>", "The Beginning", 3, choiceStrings, 1);
     }
     @Override
     public void choiceAction(int choice) {
@@ -54,5 +54,10 @@ public class FirstEvent extends Event {
             return "<html><h1>I was pretty clever. Whenever I was in a pinch, I was able<br> to get myself out of it with my two inch tounge.</h1></html>";
         }
         return "Not ready yet!";
+    }
+
+    @Override
+    public void eventEncounterEvoke() {
+
     }
 }

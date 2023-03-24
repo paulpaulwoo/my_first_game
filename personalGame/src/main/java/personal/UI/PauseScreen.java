@@ -26,11 +26,7 @@ public class PauseScreen extends JPanel {
         PauseButton secondButton = new PauseButton("Exit to main menu") {
             @Override
             public void toExecute() {
-                GameEngine.endPause();
-                GameEngine.frameClear();
-                GameEngine.engine.titleSequenceInit();
-                GameEngine.run = false;
-                GameEngine.engine.clearCombat();
+                GameEngine.combatSequenceEnd(0);
 
             };
         };

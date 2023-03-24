@@ -38,11 +38,60 @@ public class MainScreen extends JPanel {
     private static final String htmlHeading = "<html><h1>";
     public static MainScreen screen;
 
+    //for after combat
+    public MainScreen () {
+        GameEngine.frameClear();
+        this.setBounds(0, 0, 1024,900);
+        currentEvent = Event.getEvent(nextEventId);
+
+
+        statpanel = makeStatPanel(pData);
+
+        
+
+        eventPanel = makeEventPanel(currentEvent);
+
+
+        textPanel = makeTextPanel(currentEvent.baseChoiceString);
+
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+        Dimension d0 = new Dimension(Integer.MAX_VALUE, (int) (this.getHeight() * 0.05));
+        Dimension d1 = new Dimension(Integer.MAX_VALUE, (int) (this.getHeight() * 0.65));
+        Dimension d2 = new Dimension(Integer.MAX_VALUE, (int) (this.getHeight() * 0.30));
+
+        statpanel.setPreferredSize(d0);
+        statpanel.setMaximumSize(d0);
+        statpanel.setMinimumSize(d0);
+
+        eventPanel.setPreferredSize(d1);
+        eventPanel.setMaximumSize(d1);
+        eventPanel.setMinimumSize(d1);
+
+        textPanel.setPreferredSize(d2);
+        textPanel.setMaximumSize(d2);
+        textPanel.setMinimumSize(d2);
+
+        this.add(statpanel);
+        this.add(Box.createVerticalGlue());
+        this.add(eventPanel);
+        this.add(Box.createVerticalGlue());
+        this.add(textPanel);
+        this.add(Box.createVerticalGlue());
+
+        screen = this;
+        this.revalidate();
+        this.repaint();
+        this.setVisible(true);
+    }
+
+    //for first start
     public MainScreen(PlayerData data) {
         pData = data;
         GameEngine.frameClear();
         this.setBounds(0, 0, 1024,900);
-        currentEvent = Event.getEvent(pData.nextEventId);
+        nextEventId = pData.nextEventId;
+        currentEvent = Event.getEvent(nextEventId);
 
 
         statpanel = makeStatPanel(data);
@@ -274,6 +323,7 @@ public class MainScreen extends JPanel {
 
     public void nextEvent() {
         currentEvent = Event.getEvent(nextEventId);
+        currentEvent.eventEncounterEvoke();
         refreshEventPanel();
         refreshTextPanel();
     }
